@@ -8,7 +8,29 @@ const getAllCities = async () => {
     return cities
 }
 
+
+const showSocialMedias = async () => {
+    const footerSocialMedia = document.querySelector('#footer__social-media')
+
+    const res = await fetch(`${baseUrl}/v1/social`)
+    const socialMedias = await res.json()
+
+    socialMedias.data.socials.forEach(social => {
+        console.log(social);
+
+        footerSocialMedia.insertAdjacentHTML('beforeend', `
+            <a href="${social.link}" class="sidebar__icon-link">
+                <img src="${social.icon.path}" alt="${social.name}" width="18px" height="18px" class="sidebar__icon bi bi-twitter">
+            </a>
+            `)
+    })
+
+}
+
+
+
 export {
     baseUrl,
-    getAllCities
+    getAllCities,
+    showSocialMedias,
 }
