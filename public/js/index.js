@@ -27,8 +27,10 @@ window.addEventListener("load", () => {
       `
       )
     })
+
   })
 
+  // City Search
   searchInput.addEventListener('keyup', (event) => {
     searchedCitites = [...cities].filter(city => city.name.startsWith(event.target.value))
     searchCity(event)
