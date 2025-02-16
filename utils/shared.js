@@ -20,7 +20,7 @@ const showSocialMedias = async () => {
 
         footerSocialMedia.insertAdjacentHTML('beforeend', `
             <a href="${social.link}" class="sidebar__icon-link">
-                <img src="${social.icon.path}" alt="${social.name}" width="18px" height="18px" class="sidebar__icon bi bi-twitter">
+                <img src="${social.icon}" alt="${social.name}" width="18px" height="18px" class="sidebar__icon bi bi-twitter">
             </a>
             `)
     })

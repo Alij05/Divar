@@ -1,10 +1,17 @@
 import { getAllCities } from "../../utils/shared.js";
 
+let cities = null
+let searchedCitites = null
+
+
 window.addEventListener("load", () => {
   const loadingContainer = document.querySelector('#loading-container')
+  const searchInput = document.querySelector('#search-input')
 
-  
+
   getAllCities().then((response) => {
+    cities = response.data.cities
+
     // Website Loader
     loadingContainer.style.display = 'none'
 
@@ -22,5 +29,40 @@ window.addEventListener("load", () => {
     })
   })
 
+  searchInput.addEventListener('keyup', (event) => {
+    searchedCitites = [...cities].filter(city => city.name.startsWith(event.target.value))
+    searchCity(event)
+  })
+
 
 })
+
+
+
+const searchCity = (event) => {
+  const searchResultCitiesList = document.querySelector('#search-result-cities')
+
+  if (event.target.value === '') {
+    searchResultCitiesList.classList.remove('active')
+  } else {
+    searchResultCitiesList.classList.add('active')
+  }
+
+  searchResultCitiesList.innerHTML = ''
+  if (searchedCitites.length) {
+    searchedCitites.forEach(city => {
+      if (city.name.startsWith(event.target.value)) {
+        searchResultCitiesList.insertAdjacentHTML('beforeend', `
+          <li>${city.name}</li>
+          `)
+      }
+
+    })
+  } else {
+    searchResultCitiesList.insertAdjacentHTML('beforeend', `
+      <img src="https://support-faq.divarcdn.com/web/2024/03/static/media/magnifier.7f88b2e3f8ae30f4333986d0b0fbcf1d.svg"></img>
+      <p>شهر مورد نظر یافت نشد</p>
+      `)
+  }
+
+}
