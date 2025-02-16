@@ -1,8 +1,10 @@
 import { getAllCities } from "../../utils/shared.js";
 
 window.addEventListener("load", () => {
-
+  const loadingContainer = document.querySelector('#loading-container')
+  
   getAllCities().then((response) => {
+    loadingContainer.style.display = 'none'
     const popularCitiesContainer = document.querySelector("#popular-cities");
     const popularCities = response.data.cities.filter((city) => city.popular);
 
@@ -15,6 +17,6 @@ window.addEventListener("load", () => {
       )
     })
   })
-  
+
 
 })
