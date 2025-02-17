@@ -79,7 +79,7 @@ const searchCity = (event) => {
 
 
 const cityClickHandler = (cityName, cityID) => {
-  saveInLocalStorage('city', { name: cityName, id: cityID })
+  saveInLocalStorage('cities', [{ name: cityName, id: cityID }])
   location.href = './pages/posts.html'
 }
 
