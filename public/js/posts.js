@@ -1,5 +1,5 @@
 import { baseUrl, getCategories, getPosts } from "../../utils/shared.js"
-import { addParamToURL, getFromLocalStorage } from "../../utils/utils.js"
+import { addParamToURL, calculateRelativeTimeDifference, getFromLocalStorage } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
     const loadingContainer = document.querySelector('#loading-container')
@@ -39,8 +39,9 @@ const generatePosts = async (posts) => {
 
     if (posts.length) {
         posts.forEach(post => {
+            const date = calculateRelativeTimeDifference(post.createdAt)
+
             postsContainer.insertAdjacentHTML('beforeend', `
-            
             <div class="col-4">
               <a href="post.html/id=${post._id}" class="product-card">
                 <div class="product-card__right">
@@ -53,7 +54,7 @@ const generatePosts = async (posts) => {
                       ${post.price === 0
                     ? "توافقی"
                     : post.price.toLocaleString() + " تومان"}</span>
-                    <span class="product-card__time">Date</span>
+                    <span class="product-card__time">${date}</span>
                   </div>
                 </div>
                 <div class="product-card__left">

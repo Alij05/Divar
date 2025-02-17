@@ -19,8 +19,37 @@ const addParamToURL = (param, value) => {
 }
 
 
+const calculateRelativeTimeDifference = (createdAt) => {
+    let currentTime = new Date();
+    let createdTime = new Date(createdAt);
+
+    const timeDifference = currentTime - createdTime;
+    const minutes = Math.floor(timeDifference / (60 * 1000));
+    const hours = Math.floor(timeDifference / (60 * 60 * 1000));
+    const days = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+    const weeks = Math.floor(timeDifference / (7 * 24 * 60 * 60 * 1000));
+    const months = Math.floor(timeDifference / (30 * 24 * 60 * 60 * 1000));
+    const years = Math.floor(timeDifference / (365 * 24 * 60 * 60 * 1000));
+
+    if (minutes < 60) {
+        return `${minutes} دقیقه پیش`;
+    } else if (hours < 24) {
+        return `${hours} ساعت پیش`;
+    } else if (days < 7) {
+        return `${days} روز پیش`;
+    } else if (weeks < 4) {
+        return `${weeks} هفته پیش`;
+    } else if (months < 12) {
+        return `${months} ماه پیش`;
+    } else {
+        return `${years} سال پیش`;
+    }
+}
+
+
 export {
     saveInLocalStorage,
     getFromLocalStorage,
     addParamToURL,
+    calculateRelativeTimeDifference,
 }
