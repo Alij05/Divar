@@ -18,11 +18,19 @@ const showSocialMedias = async () => {
     socialMedias.data.socials.forEach(social => {
         footerSocialMedia.insertAdjacentHTML('beforeend', `
             <a href="${social.link}" class="sidebar__icon-link">
-                <img src="${social.icon}" alt="${social.name}" width="18px" height="18px" class="sidebar__icon bi bi-twitter">
+                <img src="${baseUrl}/${social.icon.path}" alt="${social.name}" width="18px" height="18px" class="sidebar__icon bi bi-twitter">
             </a>
             `)
     })
 
+}
+
+
+const getPosts = async (citiesIDs) => {
+    const res = await fetch(`${baseUrl}/v1/post/?city=${citiesIDs}`)
+    const posts = await res.json()
+
+    return posts
 }
 
 
@@ -31,4 +39,5 @@ export {
     baseUrl,
     getAllCities,
     showSocialMedias,
+    getPosts,
 }
