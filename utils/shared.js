@@ -34,10 +34,18 @@ const getPosts = async (citiesIDs) => {
 }
 
 
+const getCategories = async () => {
+    const res = await fetch(`${baseUrl}/v1/category`)
+    const categories = await res.json()
+
+    return categories
+}
+
 
 export {
     baseUrl,
     getAllCities,
     showSocialMedias,
     getPosts,
+    getCategories,
 }

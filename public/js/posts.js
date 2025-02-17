@@ -1,11 +1,10 @@
-import { baseUrl, getPosts } from "../../utils/shared.js"
-import { getFromLocalStorage } from "../../utils/utils.js"
+import { baseUrl, getCategories, getPosts } from "../../utils/shared.js"
+import { addParamToURL, getFromLocalStorage } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
     const loadingContainer = document.querySelector('#loading-container')
 
     const cities = getFromLocalStorage('cities')
-
     cities.forEach(city => {
         getPosts(city.id).then(response => {
             // Website Loader
@@ -15,6 +14,16 @@ window.addEventListener('load', () => {
             generatePosts(posts)
 
         })
+
+    })
+
+    getCategories().then(response => {
+        // Website Loader
+        loadingContainer.style.display = 'none'
+
+        const categories = response.data.categories
+        generateCategories(categories)
+        console.log();
 
     })
 
@@ -66,3 +75,34 @@ const generatePosts = async (posts) => {
     }
 
 }
+
+
+const generateCategories = (categories) => {
+    const sidebarCategoriesList = document.querySelector('#sidebar__category-list')
+
+    categories.forEach(category => {
+        sidebarCategoriesList.insertAdjacentHTML('beforeend', `
+          <div class="sidebar__category-link" id="category-${category._id}">
+            <div class="sidebar__category-link_details" onclick="categoryClickHandler('${category._id}')">
+              <i class="sidebar__category-icon bi bi-house"></i>
+              <p>${category.title}</p>
+            </div>
+          </div>
+
+            `)
+    })
+
+}
+
+const categoryClickHandler = (categoryID) => {
+    addParamToURL('categoryID', categoryID)    
+}
+
+
+
+
+
+
+
+// Bind
+window.categoryClickHandler = categoryClickHandler
