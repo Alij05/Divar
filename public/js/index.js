@@ -1,4 +1,6 @@
 import { getAllCities } from "../../utils/shared.js";
+import { getFromLocalStorage, saveInLocalStorage } from "../../utils/utils.js";
+
 
 let cities = null
 let searchedCitites = null
@@ -7,6 +9,12 @@ let searchedCitites = null
 window.addEventListener("load", () => {
   const loadingContainer = document.querySelector('#loading-container')
   const searchInput = document.querySelector('#search-input')
+
+  // let isCitySelected = getFromLocalStorage('city')
+  // console.log(isCitySelected);
+  // if (isCitySelected) {
+  //   location.href = './pages/posts.html'
+  // }
 
 
   getAllCities().then((response) => {
@@ -21,8 +29,8 @@ window.addEventListener("load", () => {
 
     popularCities.forEach((city) => {
       popularCitiesContainer.insertAdjacentHTML("beforeend", `
-        <li class="main__cities-item">
-            <p class="main__cities-link">${city.name}</p>
+        <li class="main__cities-item" onclick="cityClickHandler('${city.name}', ${city.id})">
+            <p  class="main__cities-link">${city.name}</p>
         </li>
       `
       )
@@ -55,7 +63,7 @@ const searchCity = (event) => {
     searchedCitites.forEach(city => {
       if (city.name.startsWith(event.target.value)) {
         searchResultCitiesList.insertAdjacentHTML('beforeend', `
-          <li>${city.name}</li>
+          <li onclick="cityClickHandler('${city.name}', ${city.id})">${city.name}</li>
           `)
       }
 
@@ -68,3 +76,17 @@ const searchCity = (event) => {
   }
 
 }
+
+
+const cityClickHandler = (cityName, cityID) => {
+  saveInLocalStorage('city', { name: cityName, id: cityID })
+  location.href = './pages/posts.html'
+}
+
+
+
+
+
+
+// Bind
+window.cityClickHandler = cityClickHandler
