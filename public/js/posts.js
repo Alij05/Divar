@@ -84,14 +84,38 @@ const generateCategories = (categories) => {
   sidebarCategoriesList.innerHTML = ''
 
 
-
   if (categoryID) {
     const categoryInfos = categories.filter(category => category._id === categoryID)
-    console.log(categoryInfos);
 
     // if be a Sub Category
     if (!categoryInfos.length) {
-      sidebarCategoriesList.innerHTML = ''
+      const subCategory = findSubCategoryByID(categories, categoryID)
+
+      if (subCategory) {
+        console.log('sub');
+        sidebarCategoriesList.insertAdjacentHTML('beforeend', `
+              <div class="all-categories">
+                <p>همه اگهی ها</p>
+                <i class="bi bi-arrow-right"></i>
+              </div>
+
+              <div class="sidebar__category-link active-category" href="#" id="category-${subCategory._id}">
+                <div class="sidebar__category-link_details" onclick="categoryClickHandler('${subCategory._id}')">
+                  <i class="sidebar__category-icon bi bi-house"></i>
+                  <p>${subCategory.title}</p>
+                </div>
+                <ul class="subCategory-list">
+                  ${subCategory.subCategories.map(createSubCategoryHtml).join("")}
+                </ul>
+              </div>
+
+          `)
+        
+      } else {        // be a Sub Sub Category
+        console.log('sub sub sub');
+        
+      }
+
 
     } else {
       sidebarCategoriesList.innerHTML = ''
@@ -147,6 +171,18 @@ const createSubCategoryHtml = (subCategory) => {
       ${subCategory.title}
     </li>
     `
+}
+
+
+const findSubCategoryByID = (categories, categoryID) => {
+  const allSubCategories = categories.flatMap(category => category.subCategories)
+  console.log('allSubCategories', allSubCategories);
+  const subCategory = allSubCategories.find(subCategory => subCategory._id === categoryID)
+  // const subSubCategory = subCategory.flatMap(subCategory => subCategory.subCategories)
+  // console.log('subSubCategory', subSubCategory);
+
+  return subCategory
+
 }
 
 
