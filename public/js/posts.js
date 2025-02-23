@@ -1,5 +1,5 @@
 import { baseUrl, getCategories, getPosts } from "../../utils/shared.js"
-import { addParamToURL, getParamFromURL, calculateRelativeTimeDifference, getFromLocalStorage } from "../../utils/utils.js"
+import { addParamToURL, removeParamFromURL, getParamFromURL, calculateRelativeTimeDifference, getFromLocalStorage } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
@@ -94,7 +94,7 @@ const generateCategories = (categories) => {
       if (subCategory) {
         console.log('sub');
         sidebarCategoriesList.insertAdjacentHTML('beforeend', `
-              <div class="all-categories">
+              <div class="all-categories" onclick="backToAllCategories()">
                 <p>همه اگهی ها</p>
                 <i class="bi bi-arrow-right"></i>
               </div>
@@ -121,7 +121,7 @@ const generateCategories = (categories) => {
       sidebarCategoriesList.innerHTML = ''
       categoryInfos.forEach(category => {
         sidebarCategoriesList.insertAdjacentHTML('beforeend', `
-              <div class="all-categories">
+              <div class="all-categories" onclick="backToAllCategories()">
                 <p>همه اگهی ها</p>
                 <i class="bi bi-arrow-right"></i>
               </div>
@@ -192,10 +192,13 @@ const categoryClickHandler = (categoryID) => {
 }
 
 
-
+const backToAllCategories = () => {
+  removeParamFromURL('categoryID')
+}
 
 
 
 
 // Bind
 window.categoryClickHandler = categoryClickHandler
+window.backToAllCategories = backToAllCategories

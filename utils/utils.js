@@ -18,6 +18,17 @@ const addParamToURL = (param, value) => {
     location.href = url.toString()
 }
 
+
+const removeParamFromURL = (param) => {
+    const url = new URL(location.href)
+    const searchParams = url.searchParams
+
+    searchParams.delete(param)
+    window.history.replaceState(null, null, url)
+
+    location.reload()
+}
+
 const getParamFromURL = (param) => {
     const urlParams = new URLSearchParams(location.search)
     return urlParams.get(param)
@@ -57,6 +68,7 @@ export {
     saveInLocalStorage,
     getFromLocalStorage,
     addParamToURL,
+    removeParamFromURL,
     getParamFromURL,
     calculateRelativeTimeDifference,
 }
