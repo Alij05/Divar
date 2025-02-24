@@ -157,7 +157,7 @@ display: block !important;
     display: none;
 }
 .sidebar__category-link {
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     font-size: 1.4rem;
     cursor: pointer;
     font-family: "iransans-medium";

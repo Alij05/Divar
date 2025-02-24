@@ -88,15 +88,16 @@ const generateCategories = (categories) => {
 
 
   if (categoryID) {
-    const categoryInfos = categories.filter(category => category._id === categoryID)
+    const categoryInfos = categories.filter(category => category._id === categoryID)  // check is a Main Category or Sub Category
 
     // if be a Sub Category
     if (!categoryInfos.length) {
       const subCategory = findSubCategoryByID(categories, categoryID)
+      const subCategoryParent = findCategoryByID(categories, subCategory?.parent)
 
+      // if be a Main Sub Category (layer 3)
       if (subCategory) {
         console.log('sub');
-        console.log(subCategory.filters);
 
         subCategory.filters.forEach(filter => filterGenerator(filter))
 
@@ -106,30 +107,53 @@ const generateCategories = (categories) => {
                 <i class="bi bi-arrow-right"></i>
               </div>
 
-              <div class="sidebar__category-link active-category" href="#" id="category-${subCategory._id}">
+              <div class="sidebar__category-link" id="category-${subCategoryParent._id}">
+                <div class="sidebar__category-link_details" onclick="categoryClickHandler('${subCategoryParent._id}')">
+                  <i class="sidebar__category-icon bi bi-house"></i>
+                  <p>${subCategoryParent.title}</p>
+                </div>
+              </div>
+
+              <div class="sidebar__category-link active-category" href="#" id="category-${subCategory._id}" style="margin-right:15px;">
                 <div class="sidebar__category-link_details" onclick="categoryClickHandler('${subCategory._id}')">
                   <i class="sidebar__category-icon bi bi-house"></i>
                   <p>${subCategory.title}</p>
                 </div>
-                <ul class="subCategory-list">
+                <ul class="subCategory-list" style="margin-right:10px;">
                   ${subCategory.subCategories.map(createSubCategoryHtml).join("")}
                 </ul>
               </div>
-
           `)
 
-      } else {        // be a Sub Sub Category
+        // if be a Sub Sub Category (layer 4)
+      } else {
+        console.log('sub sub');
+
         const subSubCategory = findSubSubCategoryByID(categories, categoryID)
-        const subCategoryFilters = subSubCategory.filters
-        console.log(subCategoryFilters);
+        const subSubCategoryParent = findSubCategoryByID(categories, subSubCategory?.parent)
 
-        subCategoryFilters.forEach(filter => filterGenerator(filter))
+        subSubCategory.filters.forEach(filter => filterGenerator(filter))
 
-        console.log('sub sub sub');
+        sidebarCategoriesList.insertAdjacentHTML('beforeend', `
+          <div class="all-categories" onclick="backToAllCategories()">
+            <p>همه اگهی ها</p>
+            <i class="bi bi-arrow-right"></i>
+          </div>
+
+          <div class="sidebar__category-link active-category" href="#" id="category-${subSubCategoryParent._id}">
+            <div class="sidebar__category-link_details" onclick="categoryClickHandler('${subSubCategoryParent._id}')">
+              <i class="sidebar__category-icon bi bi-house"></i>
+              <p>${subSubCategoryParent.title}</p>
+            </div>
+            <ul class="subCategory-list" style="margin-right:10px;">
+              ${subSubCategoryParent.subCategories.map(createSubCategoryHtml).join("")}
+            </ul>
+          </div>
+      `)
 
       }
 
-
+      // if be a selected Main Category (layer 2)
     } else {
       sidebarCategoriesList.innerHTML = ''
       categoryInfos.forEach(category => {
@@ -144,21 +168,18 @@ const generateCategories = (categories) => {
                   <i class="sidebar__category-icon bi bi-house"></i>
                   <p>${category.title}</p>
                 </div>
-                <ul class="subCategory-list">
+                <ul class="subCategory-list" style="margin-right: 15px;">
                   ${category.subCategories.map(createSubCategoryHtml).join("")}
                 </ul>
               </div>
 
         `)
-
-
       })
-
-
 
     }
 
 
+    // if just have Main Categories (layer 1)
   } else {
     categories.forEach(category => {
       sidebarCategoriesList.insertAdjacentHTML('beforeend', `
@@ -187,6 +208,14 @@ const createSubCategoryHtml = (subCategory) => {
 }
 
 
+const findCategoryByID = (categories, categoryID) => {
+  const category = categories.find(category => category._id === categoryID)
+
+  return category
+
+}
+
+
 const findSubCategoryByID = (categories, categoryID) => {
   const allSubCategories = categories.flatMap(category => category.subCategories)
   const subCategory = allSubCategories.find(subCategory => subCategory._id === categoryID)
@@ -198,9 +227,9 @@ const findSubCategoryByID = (categories, categoryID) => {
 
 const findSubSubCategoryByID = (categories, categoryID) => {
   const allSubCategories = categories.flatMap(category => category.subCategories)
-  const allSubSubCategories = allSubCategories.flatMap(category => category.subCategories)
+  const allSubSubCategories = allSubCategories.flatMap(subCategory => subCategory.subCategories)
 
-  const subSubCategory = allSubSubCategories.find(subCategory => subCategory._id === categoryID)
+  const subSubCategory = allSubSubCategories.find(subSubCategory => subSubCategory._id === categoryID)
 
   return subSubCategory
 }
