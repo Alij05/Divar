@@ -13,9 +13,11 @@ window.addEventListener('load', () => {
       const posts = response.data.posts
       generatePosts(posts)
 
+      // console.log(posts);
     })
 
   })
+  
 
   getCategories().then(response => {
     // Website Loader
@@ -23,7 +25,6 @@ window.addEventListener('load', () => {
 
     const categories = response.data.categories
     generateCategories(categories)
-    console.log();
 
   })
 
@@ -36,6 +37,7 @@ window.addEventListener('load', () => {
 const generatePosts = async (posts) => {
 
   const postsContainer = document.querySelector('#posts-container')
+  postsContainer.innerHTML = ''
 
   if (posts.length) {
     posts.forEach(post => {
@@ -176,10 +178,7 @@ const createSubCategoryHtml = (subCategory) => {
 
 const findSubCategoryByID = (categories, categoryID) => {
   const allSubCategories = categories.flatMap(category => category.subCategories)
-  console.log('allSubCategories', allSubCategories);
   const subCategory = allSubCategories.find(subCategory => subCategory._id === categoryID)
-  // const subSubCategory = subCategory.flatMap(subCategory => subCategory.subCategories)
-  // console.log('subSubCategory', subSubCategory);
 
   return subCategory
 

@@ -18,7 +18,6 @@ const addParamToURL = (param, value) => {
     location.href = url.toString()
 }
 
-
 const removeParamFromURL = (param) => {
     const url = new URL(location.href)
     const searchParams = url.searchParams
