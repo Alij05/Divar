@@ -17,7 +17,7 @@ window.addEventListener('load', () => {
     })
 
   })
-  
+
 
   getCategories().then(response => {
     // Website Loader
@@ -83,6 +83,7 @@ const generatePosts = async (posts) => {
 const categoryID = getParamFromURL('categoryID')
 const generateCategories = (categories) => {
   const sidebarCategoriesList = document.querySelector('#sidebar__category-list')
+
   sidebarCategoriesList.innerHTML = ''
 
 
@@ -95,6 +96,10 @@ const generateCategories = (categories) => {
 
       if (subCategory) {
         console.log('sub');
+        console.log(subCategory.filters);
+
+        subCategory.filters.forEach(filter => filterGenerator(filter))
+
         sidebarCategoriesList.insertAdjacentHTML('beforeend', `
               <div class="all-categories" onclick="backToAllCategories()">
                 <p>همه اگهی ها</p>
@@ -112,10 +117,16 @@ const generateCategories = (categories) => {
               </div>
 
           `)
-        
+
       } else {        // be a Sub Sub Category
+        const subSubCategory = findSubSubCategoryByID(categories, categoryID)
+        const subCategoryFilters = subSubCategory.filters
+        console.log(subCategoryFilters);
+
+        subCategoryFilters.forEach(filter => filterGenerator(filter))
+
         console.log('sub sub sub');
-        
+
       }
 
 
@@ -184,6 +195,59 @@ const findSubCategoryByID = (categories, categoryID) => {
 
 }
 
+
+const findSubSubCategoryByID = (categories, categoryID) => {
+  const allSubCategories = categories.flatMap(category => category.subCategories)
+  const allSubSubCategories = allSubCategories.flatMap(category => category.subCategories)
+
+  const subSubCategory = allSubSubCategories.find(subCategory => subCategory._id === categoryID)
+
+  return subSubCategory
+}
+
+
+const filterGenerator = (filter) => {
+  const sidebarFiltersContainer = document.querySelector('#sidebar__fitlers-dynamic')
+
+  sidebarFiltersContainer.insertAdjacentHTML('beforeend',
+    `
+     ${filter.type === 'selectbox' ? `
+       <div class="accordion accordion-flush" id="accordionFlushExample">
+         <div class="accordion-item">
+           <h2 class="accordion-header">
+             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-${filter.slug}" aria-expanded="false" aria-controls="accordion-${filter.name}">
+               <span class="sidebar__filter-title">${filter.name}</span>
+             </button>
+           </h2>
+           <div id="accordion-${filter.slug}" class="accordion-collapse collapse" aria-labelledby="accordion-${filter.name}" data-bs-parent="#accordionFlushExample">
+             <div class="accordion-body">
+               <select class="selectbox">
+                 ${filter.options.sort((a, b) => b - a).map((option) => `<option value='${option}'>${option}</option>`)}
+               </select>
+             </div>
+           </div>
+         </div>
+       </div>
+      `
+      :
+      ""}
+
+      ${filter.type === 'checkbox' ? `
+        <div class="sidebar__filter">
+         <label class="switch">
+             <input id="exchange_controll" class="icon-controll" type="checkbox">
+             <span class="slider round"></span>
+         </label>
+         <p>${filter.name}</p>
+       </div>
+       `
+      :
+      ""}
+
+
+  `)
+
+}
 
 
 const categoryClickHandler = (categoryID) => {
