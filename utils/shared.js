@@ -29,11 +29,16 @@ const showSocialMedias = async () => {
 
 
 const getPosts = async (citiesIDs) => {
-    const categoryID = getParamFromURL('categoryID')
     let url = `${baseUrl}/v1/post/?city=${citiesIDs}`;
+    const categoryID = getParamFromURL('categoryID')
+    const searchValue = getParamFromURL('search')
 
     if (categoryID) {
         url += `&categoryId=${categoryID}`
+    }
+
+    if (searchValue) {
+        url += `&search=${searchValue}`
     }
 
     const res = await fetch(url)

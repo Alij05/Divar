@@ -7,7 +7,6 @@ const getFromLocalStorage = (key) => {
     return JSON.parse(localStorage.getItem(key))
 }
 
-
 const addParamToURL = (param, value) => {
     const url = new URL(location.href)
     const searchParams = url.searchParams
@@ -32,7 +31,6 @@ const getParamFromURL = (param) => {
     const urlParams = new URLSearchParams(location.search)
     return urlParams.get(param)
 }
-
 
 const calculateRelativeTimeDifference = (createdAt) => {
     let currentTime = new Date();

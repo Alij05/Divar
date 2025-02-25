@@ -7,20 +7,20 @@ window.addEventListener('load', () => {
 
     const globalSearchInput = document.querySelector('#global_search_input')
     const removeSearchValueIcon = document.querySelector('#remove-search-value-icon')
-    const searchValue = getParamFromURL('value')
+    const searchValue = getParamFromURL('search')
 
     if (searchValue) {
         removeSearchValueIcon.style.display = 'block'
         globalSearchInput.value = searchValue
     }
     removeSearchValueIcon.addEventListener('click', () => {
-        removeParamFromURL('value')
+        removeParamFromURL('search')
     })
 
     globalSearchInput?.addEventListener('keyup', (event) => {
         if (event.keyCode === 13) {
             if (event.target.value.trim()) {
-                addParamToURL('value', event.target.value.trim())
+                addParamToURL('search', event.target.value.trim())
             }
         }
 
