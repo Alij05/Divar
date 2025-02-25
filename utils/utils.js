@@ -59,6 +59,17 @@ const calculateRelativeTimeDifference = (createdAt) => {
     }
 }
 
+const showModal = (id, className) => {
+    const element = document.querySelector(`#${id}`)
+    element.classList.add(className)
+
+}
+
+const hideModal = (id, className) => {
+    const element = document.querySelector(`#${id}`)
+    element.classList.remove(className)
+    
+}
 
 
 export {
@@ -68,4 +79,6 @@ export {
     removeParamFromURL,
     getParamFromURL,
     calculateRelativeTimeDifference,
+    showModal,
+    hideModal,
 }

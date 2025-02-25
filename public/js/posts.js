@@ -13,7 +13,6 @@ window.addEventListener('load', () => {
       const posts = response.data.posts
       generatePosts(posts)
 
-      // console.log(posts);
     })
 
   })
