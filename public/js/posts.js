@@ -5,8 +5,6 @@ window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
   let posts = null
   let backupPosts = null
-  let minPrice = 0
-  let maxPrice = 0
 
 
   const cities = getFromLocalStorage('cities')
@@ -49,13 +47,10 @@ window.addEventListener('load', () => {
 
 
   minPriceSelectbox.addEventListener('change', (event) => {
-    minPrice = event.target.value
-
     applyFilters()
-    
   })
+
   maxPriceSelectbox.addEventListener('change', (event) => {
-    maxPrice = event.target.value
     applyFilters()
   })
 
@@ -73,12 +68,21 @@ window.addEventListener('load', () => {
       filteredPosts = filteredPosts.filter(post => post.exchange)
     }
 
-    if (minPrice) {
-      filteredPosts = filteredPosts.filter(post => post.price >= minPrice)
-    }
+    // Min / Max Price Filters
+    const minPrice = minPriceSelectbox.value
+    const maxPrice = maxPriceSelectbox.value
 
-    if (maxPrice) {
-      filteredPosts = filteredPosts.filter(post => post.price <= maxPrice)
+
+    if (maxPrice !== "default") {
+      if (minPrice !== 'default') {
+        filteredPosts = filteredPosts.filter(post => post.price <= maxPrice && post.price >= minPrice)
+      } else {
+        filteredPosts = filteredPosts.filter(post => post.price <= maxPrice)
+      }
+    } else {
+      if (minPrice !== 'default') {
+        filteredPosts = filteredPosts.filter(post => post.price >= minPrice)
+      }
     }
 
     generatePosts(filteredPosts)
