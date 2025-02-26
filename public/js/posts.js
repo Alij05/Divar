@@ -5,6 +5,8 @@ window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
   let posts = null
   let backupPosts = null
+  let minPrice = 0
+  let maxPrice = 0
 
 
   const cities = getFromLocalStorage('cities')
@@ -34,29 +36,49 @@ window.addEventListener('load', () => {
 
   const justPhotoController = document.querySelector('#just_photo_controll')
   const exchangeControll = document.querySelector('#exchange_controll')
+  const minPriceSelectbox = document.querySelector('#min-price-selectbox')
+  const maxPriceSelectbox = document.querySelector('#max-price-selectbox')
 
   justPhotoController.addEventListener('change', (event) => {
-    applyFilters(posts)
+    applyFilters()
   })
 
   exchangeControll.addEventListener('change', (event) => {
-    applyFilters(posts)
+    applyFilters()
   })
 
 
+  minPriceSelectbox.addEventListener('change', (event) => {
+    minPrice = event.target.value
+
+    applyFilters()
+    
+  })
+  maxPriceSelectbox.addEventListener('change', (event) => {
+    maxPrice = event.target.value
+    applyFilters()
+  })
 
 
   //! Functions
 
-  const applyFilters = (posts) => {
+  const applyFilters = () => {
     let filteredPosts = backupPosts
 
     if (justPhotoController.checked) {
-      filteredPosts = posts.filter(post => post.pics.length)
+      filteredPosts = filteredPosts.filter(post => post.pics.length)
     }
 
     if (exchangeControll.checked) {
-      filteredPosts = posts.filter(post => post.exchange)
+      filteredPosts = filteredPosts.filter(post => post.exchange)
+    }
+
+    if (minPrice) {
+      filteredPosts = filteredPosts.filter(post => post.price >= minPrice)
+    }
+
+    if (maxPrice) {
+      filteredPosts = filteredPosts.filter(post => post.price <= maxPrice)
     }
 
     generatePosts(filteredPosts)

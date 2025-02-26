@@ -9,6 +9,8 @@ window.addEventListener('load', () => {
     const removeSearchValueIcon = document.querySelector('#remove-search-value-icon')
     const searchbarModalOverlay = document.querySelector(".searchbar__modal-overlay")
     const mostSearchedList = document.querySelector('#most_searched')
+    const minPriceSelectbox = document.querySelector('#min-price-selectbox')
+    const maxPriceSelectbox = document.querySelector('#max-price-selectbox')
 
     const searchValue = getParamFromURL('search')
 
@@ -52,6 +54,68 @@ window.addEventListener('load', () => {
         hideModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
         mostSearchedList.innerHTML = ''
     })
+
+
+    // Handle Min Price and Max Price Filtering 
+    const amounts = [
+        { value: 10000, label: "10 هزار" },
+        { value: 50000, label: "50 هزار" },
+        { value: 200000, label: "200 هزار" },
+        { value: 500000, label: "500 هزار" },
+        { value: 1000000, label: "1 میلیون" },
+        { value: 5000000, label: "5 میلیون" },
+        { value: 10000000, label: "10 میلیون" },
+        { value: 20000000, label: "20 میلیون" },
+        { value: 50000000, label: "50 میلیون" },
+        { value: 100000000, label: "100 میلیون" },
+        { value: 150000000, label: "150 میلیون" },
+        { value: 200000000, label: "200 میلیون" }
+    ];
+    let minPrice = 0
+    let maxPrice = 0
+    
+
+    minPriceSelectbox.addEventListener('change', (event) => {
+        minPrice = event.target.value
+        showMaxPriceOptions(minPrice)
+
+    })
+
+    maxPriceSelectbox.addEventListener('change', (event) => {
+        maxPrice = event.target.value
+        showMinPriceOptions(maxPrice)
+    })
+
+
+
+    //! Functions
+    const showMinPriceOptions = (maxPrice) => {
+        if(!minPrice) {
+            minPriceSelectbox.innerHTML = ''
+    
+            const filteredPriceOptions = amounts.filter(amount => amount.value <= maxPrice)
+            filteredPriceOptions.forEach(amount => {
+                minPriceSelectbox.insertAdjacentHTML('beforeend', `
+                    <option value="${amount.value}">${amount.label}</option>
+                    `)
+    
+            })
+        }
+    }
+
+    const showMaxPriceOptions = (minPrice) => {
+        if(!maxPrice) {
+            maxPriceSelectbox.innerHTML = ''
+    
+            const filteredPriceOptions = amounts.filter(amount => amount.value >= minPrice)
+            filteredPriceOptions.forEach(amount => {
+                maxPriceSelectbox.insertAdjacentHTML('beforeend', `
+                    <option value="${amount.value}">${amount.label}</option>
+                    `)
+            })
+        }
+
+        }
 
 
 })
