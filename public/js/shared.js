@@ -29,8 +29,9 @@ window.addEventListener('load', () => {
         }
     })
 
-    const mostSearchKeyWords = ["ماشین", "ساعت", "موبایل", "لپ تاپ", "تلویزیون"];
 
+    // Handle User Category Search
+    const mostSearchKeyWords = ["ماشین", "ساعت", "موبایل", "لپ تاپ", "تلویزیون"];
     globalSearchInput.addEventListener('focus', () => {
         showModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
 

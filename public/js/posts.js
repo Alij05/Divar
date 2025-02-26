@@ -3,6 +3,9 @@ import { addParamToURL, removeParamFromURL, getParamFromURL, calculateRelativeTi
 
 window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
+  let posts = null
+  let backupPosts = null
+
 
   const cities = getFromLocalStorage('cities')
   cities.forEach(city => {
@@ -10,7 +13,8 @@ window.addEventListener('load', () => {
       // Website Loader
       loadingContainer.style.display = 'none'
 
-      const posts = response.data.posts
+      posts = response.data.posts
+      backupPosts = response.data.posts
       generatePosts(posts)
 
     })
@@ -28,21 +32,48 @@ window.addEventListener('load', () => {
   })
 
 
+  const justPhotoController = document.querySelector('#just_photo_controll')
+  const exchangeControll = document.querySelector('#exchange_controll')
 
-})
+  justPhotoController.addEventListener('change', (event) => {
+    applyFilters(posts)
+  })
+
+  exchangeControll.addEventListener('change', (event) => {
+    applyFilters(posts)
+  })
 
 
 
-const generatePosts = async (posts) => {
 
-  const postsContainer = document.querySelector('#posts-container')
-  postsContainer.innerHTML = ''
+  //! Functions
 
-  if (posts.length) {
-    posts.forEach(post => {
-      const date = calculateRelativeTimeDifference(post.createdAt)
+  const applyFilters = (posts) => {
+    let filteredPosts = backupPosts
 
-      postsContainer.insertAdjacentHTML('beforeend', `
+    if (justPhotoController.checked) {
+      filteredPosts = posts.filter(post => post.pics.length)
+    }
+
+    if (exchangeControll.checked) {
+      filteredPosts = posts.filter(post => post.exchange)
+    }
+
+    generatePosts(filteredPosts)
+
+  }
+
+
+  const generatePosts = async (posts) => {
+
+    const postsContainer = document.querySelector('#posts-container')
+    postsContainer.innerHTML = ''
+
+    if (posts.length) {
+      posts.forEach(post => {
+        const date = calculateRelativeTimeDifference(post.createdAt)
+
+        postsContainer.insertAdjacentHTML('beforeend', `
             <div class="col-4">
               <a href="post.html/id=${post._id}" class="product-card">
                 <div class="product-card__right">
@@ -53,54 +84,54 @@ const generatePosts = async (posts) => {
                     <span class="product-card__condition">${post.dynamicFields[0].data}</span>
                     <span class="product-card__price">
                       ${post.price === 0
-          ? "توافقی"
-          : post.price.toLocaleString() + " تومان"}</span>
+            ? "توافقی"
+            : post.price.toLocaleString() + " تومان"}</span>
                     <span class="product-card__time">${date}</span>
                   </div>
                 </div>
                 <div class="product-card__left">
                 ${post.pics.length
-          ? `
+            ? `
                       <img class="product-card__img img-fluid" src="${baseUrl}/${post.pics[0].path}"/>`
-          : `
+            : `
                       <img class="product-card__img img-fluid" src="/public/images/main/noPicture.PNG"/>`
-        }
+          }
                   
                 </div>
               </a>
             </div>          
                 `)
-    })
+      })
 
-  } else {
-    postsContainer.innerHTML = '<p class="empty">هیچ آگهی برای شهر های شما وجود ندارد</p>'
+    } else {
+      postsContainer.innerHTML = '<p class="empty">هیچ آگهی برای شهر های شما وجود ندارد</p>'
+    }
+
   }
 
-}
+
+  const categoryID = getParamFromURL('categoryID')
+  const generateCategories = (categories) => {
+    const sidebarCategoriesList = document.querySelector('#sidebar__category-list')
+
+    sidebarCategoriesList.innerHTML = ''
 
 
-const categoryID = getParamFromURL('categoryID')
-const generateCategories = (categories) => {
-  const sidebarCategoriesList = document.querySelector('#sidebar__category-list')
+    if (categoryID) {
+      const categoryInfos = categories.filter(category => category._id === categoryID)  // check is a Main Category or Sub Category
 
-  sidebarCategoriesList.innerHTML = ''
+      // if be a Sub Category
+      if (!categoryInfos.length) {
+        const subCategory = findSubCategoryByID(categories, categoryID)
+        const subCategoryParent = findCategoryByID(categories, subCategory?.parent)
 
+        // if be a Main Sub Category (layer 3)
+        if (subCategory) {
+          console.log('sub');
 
-  if (categoryID) {
-    const categoryInfos = categories.filter(category => category._id === categoryID)  // check is a Main Category or Sub Category
+          subCategory.filters.forEach(filter => filterGenerator(filter))
 
-    // if be a Sub Category
-    if (!categoryInfos.length) {
-      const subCategory = findSubCategoryByID(categories, categoryID)
-      const subCategoryParent = findCategoryByID(categories, subCategory?.parent)
-
-      // if be a Main Sub Category (layer 3)
-      if (subCategory) {
-        console.log('sub');
-
-        subCategory.filters.forEach(filter => filterGenerator(filter))
-
-        sidebarCategoriesList.insertAdjacentHTML('beforeend', `
+          sidebarCategoriesList.insertAdjacentHTML('beforeend', `
               <div class="all-categories" onclick="backToAllCategories()">
                 <p>همه اگهی ها</p>
                 <i class="bi bi-arrow-right"></i>
@@ -124,16 +155,16 @@ const generateCategories = (categories) => {
               </div>
           `)
 
-        // if be a Sub Sub Category (layer 4)
-      } else {
-        console.log('sub sub');
+          // if be a Sub Sub Category (layer 4)
+        } else {
+          console.log('sub sub');
 
-        const subSubCategory = findSubSubCategoryByID(categories, categoryID)
-        const subSubCategoryParent = findSubCategoryByID(categories, subSubCategory?.parent)
+          const subSubCategory = findSubSubCategoryByID(categories, categoryID)
+          const subSubCategoryParent = findSubCategoryByID(categories, subSubCategory?.parent)
 
-        subSubCategory.filters.forEach(filter => filterGenerator(filter))
+          subSubCategory.filters.forEach(filter => filterGenerator(filter))
 
-        sidebarCategoriesList.insertAdjacentHTML('beforeend', `
+          sidebarCategoriesList.insertAdjacentHTML('beforeend', `
           <div class="all-categories" onclick="backToAllCategories()">
             <p>همه اگهی ها</p>
             <i class="bi bi-arrow-right"></i>
@@ -150,13 +181,13 @@ const generateCategories = (categories) => {
           </div>
       `)
 
-      }
+        }
 
-      // if be a selected Main Category (layer 2)
-    } else {
-      sidebarCategoriesList.innerHTML = ''
-      categoryInfos.forEach(category => {
-        sidebarCategoriesList.insertAdjacentHTML('beforeend', `
+        // if be a selected Main Category (layer 2)
+      } else {
+        sidebarCategoriesList.innerHTML = ''
+        categoryInfos.forEach(category => {
+          sidebarCategoriesList.insertAdjacentHTML('beforeend', `
               <div class="all-categories" onclick="backToAllCategories()">
                 <p>همه اگهی ها</p>
                 <i class="bi bi-arrow-right"></i>
@@ -173,15 +204,15 @@ const generateCategories = (categories) => {
               </div>
 
         `)
-      })
+        })
 
-    }
+      }
 
 
-    // if just have Main Categories (layer 1)
-  } else {
-    categories.forEach(category => {
-      sidebarCategoriesList.insertAdjacentHTML('beforeend', `
+      // if just have Main Categories (layer 1)
+    } else {
+      categories.forEach(category => {
+        sidebarCategoriesList.insertAdjacentHTML('beforeend', `
             <div class="sidebar__category-link" id="category-${category._id}">
               <div class="sidebar__category-link_details" onclick="categoryClickHandler('${category._id}')">
                 <i class="sidebar__category-icon bi bi-house"></i>
@@ -190,55 +221,55 @@ const generateCategories = (categories) => {
             </div>
   
               `)
-    })
+      })
+
+    }
+
 
   }
 
 
-}
-
-
-const createSubCategoryHtml = (subCategory) => {
-  return `
+  const createSubCategoryHtml = (subCategory) => {
+    return `
     <li class="${categoryID === subCategory._id ? 'active-subCategory' : ''}" onclick="categoryClickHandler('${subCategory._id}')">
       ${subCategory.title}
     </li>
     `
-}
+  }
 
 
-const findCategoryByID = (categories, categoryID) => {
-  const category = categories.find(category => category._id === categoryID)
+  const findCategoryByID = (categories, categoryID) => {
+    const category = categories.find(category => category._id === categoryID)
 
-  return category
+    return category
 
-}
-
-
-const findSubCategoryByID = (categories, categoryID) => {
-  const allSubCategories = categories.flatMap(category => category.subCategories)
-  const subCategory = allSubCategories.find(subCategory => subCategory._id === categoryID)
-
-  return subCategory
-
-}
+  }
 
 
-const findSubSubCategoryByID = (categories, categoryID) => {
-  const allSubCategories = categories.flatMap(category => category.subCategories)
-  const allSubSubCategories = allSubCategories.flatMap(subCategory => subCategory.subCategories)
+  const findSubCategoryByID = (categories, categoryID) => {
+    const allSubCategories = categories.flatMap(category => category.subCategories)
+    const subCategory = allSubCategories.find(subCategory => subCategory._id === categoryID)
 
-  const subSubCategory = allSubSubCategories.find(subSubCategory => subSubCategory._id === categoryID)
+    return subCategory
 
-  return subSubCategory
-}
+  }
 
 
-const filterGenerator = (filter) => {
-  const sidebarFiltersContainer = document.querySelector('#sidebar__fitlers-dynamic')
+  const findSubSubCategoryByID = (categories, categoryID) => {
+    const allSubCategories = categories.flatMap(category => category.subCategories)
+    const allSubSubCategories = allSubCategories.flatMap(subCategory => subCategory.subCategories)
 
-  sidebarFiltersContainer.insertAdjacentHTML('beforeend',
-    `
+    const subSubCategory = allSubSubCategories.find(subSubCategory => subSubCategory._id === categoryID)
+
+    return subSubCategory
+  }
+
+
+  const filterGenerator = (filter) => {
+    const sidebarFiltersContainer = document.querySelector('#sidebar__fitlers-dynamic')
+
+    sidebarFiltersContainer.insertAdjacentHTML('beforeend',
+      `
      ${filter.type === 'selectbox' ? `
        <div class="accordion accordion-flush" id="accordionFlushExample">
          <div class="accordion-item">
@@ -257,8 +288,8 @@ const filterGenerator = (filter) => {
          </div>
        </div>
       `
-      :
-      ""}
+        :
+        ""}
 
       ${filter.type === 'checkbox' ? `
         <div class="sidebar__filter">
@@ -269,27 +300,30 @@ const filterGenerator = (filter) => {
          <p>${filter.name}</p>
        </div>
        `
-      :
-      ""}
+        :
+        ""}
 
 
   `)
 
-}
+  }
 
 
-const categoryClickHandler = (categoryID) => {
-  addParamToURL('categoryID', categoryID)
-}
+  const categoryClickHandler = (categoryID) => {
+    addParamToURL('categoryID', categoryID)
+  }
 
 
-const backToAllCategories = () => {
-  removeParamFromURL('categoryID')
-}
+  const backToAllCategories = () => {
+    removeParamFromURL('categoryID')
+  }
 
 
 
 
-// Bind
-window.categoryClickHandler = categoryClickHandler
-window.backToAllCategories = backToAllCategories
+  // Bind
+  window.categoryClickHandler = categoryClickHandler
+  window.backToAllCategories = backToAllCategories
+
+
+})
