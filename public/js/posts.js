@@ -5,6 +5,7 @@ window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
   let posts = null
   let backupPosts = null
+  let appliedDynamicFilters = {}
 
 
   const cities = getFromLocalStorage('cities')
@@ -68,10 +69,9 @@ window.addEventListener('load', () => {
       filteredPosts = filteredPosts.filter(post => post.exchange)
     }
 
-    // Min / Max Price Filters
+    // Min / Max Price Filtering
     const minPrice = minPriceSelectbox.value
     const maxPrice = maxPriceSelectbox.value
-
 
     if (maxPrice !== "default") {
       if (minPrice !== 'default') {
@@ -84,6 +84,15 @@ window.addEventListener('load', () => {
         filteredPosts = filteredPosts.filter(post => post.price >= minPrice)
       }
     }
+
+    // Dynamic Filtering
+    for (const slug in appliedDynamicFilters) {
+      filteredPosts = filteredPosts.filter(post => {
+        return post.dynamicFields.some(field => field.slug === slug && field.data === appliedDynamicFilters[slug])
+      })
+    }
+
+
 
     generatePosts(filteredPosts)
 
@@ -306,7 +315,7 @@ window.addEventListener('load', () => {
            </h2>
            <div id="accordion-${filter.slug}" class="accordion-collapse collapse" aria-labelledby="accordion-${filter.name}" data-bs-parent="#accordionFlushExample">
              <div class="accordion-body">
-               <select class="selectbox">
+               <select class="selectbox" onchange="selectboxDynamicFilterHandler(event.target.value, '${filter.slug}')">
                  ${filter.options.sort((a, b) => b - a).map((option) => `<option value='${option}'>${option}</option>`)}
                </select>
              </div>
@@ -345,11 +354,18 @@ window.addEventListener('load', () => {
   }
 
 
+  const selectboxDynamicFilterHandler = (value, slug) => {
+    appliedDynamicFilters[slug] = value
+    applyFilters()
+  }
+
+
 
 
   // Bind
   window.categoryClickHandler = categoryClickHandler
   window.backToAllCategories = backToAllCategories
+  window.selectboxDynamicFilterHandler = selectboxDynamicFilterHandler
 
 
 })
