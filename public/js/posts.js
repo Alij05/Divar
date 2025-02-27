@@ -87,9 +87,13 @@ window.addEventListener('load', () => {
 
     // Dynamic Filtering
     for (const slug in appliedDynamicFilters) {
-      filteredPosts = filteredPosts.filter(post => {
-        return post.dynamicFields.some(field => field.slug === slug && field.data === appliedDynamicFilters[slug])
-      })
+      if (appliedDynamicFilters[slug] !== 'default') {
+        filteredPosts = filteredPosts.filter(post => {
+          return post.dynamicFields.some(field => field.slug === slug && field.data === appliedDynamicFilters[slug])
+        })
+
+      }
+
     }
 
 
@@ -316,6 +320,7 @@ window.addEventListener('load', () => {
            <div id="accordion-${filter.slug}" class="accordion-collapse collapse" aria-labelledby="accordion-${filter.name}" data-bs-parent="#accordionFlushExample">
              <div class="accordion-body">
                <select class="selectbox" onchange="selectboxDynamicFilterHandler(event.target.value, '${filter.slug}')">
+               <option value='default'>پیش فرض</option>
                  ${filter.options.sort((a, b) => b - a).map((option) => `<option value='${option}'>${option}</option>`)}
                </select>
              </div>
