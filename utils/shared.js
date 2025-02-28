@@ -11,6 +11,14 @@ const getAllCities = async () => {
 }
 
 
+const getAllLocations = async () => {
+    const res = await fetch(`${baseUrl}/v1/location`)
+    const response = await res.json()
+
+    return response.data
+}
+
+
 const showSocialMedias = async () => {
     const footerSocialMedia = document.querySelector('#footer__social-media')
 
@@ -75,31 +83,7 @@ const getAndShowHeaderCityLocations = () => {
 }
 
 
-const addCityToModal = (selectedCities) => {
-    const modalSelectedCitiesCotainer = document.querySelector('#city-selected')
-    modalSelectedCitiesCotainer.innerHTML = ''
 
-    selectedCities.forEach(city => {
-        console.log(city.name);
-        modalSelectedCitiesCotainer.insertAdjacentHTML('beforeend', `
-            <div class="city-modal__selected-item">
-                <span class="city-modal__selected-text">${city.name}</span>
-                <button class="city-modal__selected-btn" onclick="removeCityFromModal('${city.id}', ${selectedCities})">
-                  <i class="city-modal__selected-icon bi bi-x"></i>
-                </button>
-            </div>
-            `)
-
-    })
-}
-
-
-const removeCityFromModal = (cityID, selectedCities) => {
-    selectedCities = selectedCities.filter(city => city.id === cityID)
-
-    addCityToModal(selectedCities)
-
-}
 
 
 export {
@@ -109,5 +93,5 @@ export {
     getPosts,
     getCategories,
     getAndShowHeaderCityLocations,
-    addCityToModal,
+    
 }

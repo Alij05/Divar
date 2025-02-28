@@ -1,4 +1,4 @@
-import { addCityToModal, getAndShowHeaderCityLocations, showSocialMedias } from "../../utils/shared.js";
+import { getAndShowHeaderCityLocations, showSocialMedias } from "../../utils/shared.js";
 import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, showModal } from "../../utils/utils.js";
 
 
@@ -59,9 +59,11 @@ window.addEventListener('load', () => {
         mostSearchedList.innerHTML = ''
     })
 
+
+    // Handle City Modal 
     headerCityContainer.addEventListener('click', (event) => {
         showModal('city-modal', 'city-modal--active')
-        
+
         const cities = getFromLocalStorage('cities')
         const deleteCitiesBtn = document.querySelector('#delete-all-cities')
         deleteCitiesBtn.style.display = 'block'
@@ -71,9 +73,35 @@ window.addEventListener('load', () => {
 
     })
 
+    const addCityToModal = (selectedCities) => {
+        const modalSelectedCitiesCotainer = document.querySelector('#city-selected')
+        modalSelectedCitiesCotainer.innerHTML = ''
+
+        selectedCities.forEach(city => {
+            console.log(city.name);
+            modalSelectedCitiesCotainer.insertAdjacentHTML('beforeend', `
+                <div class="city-modal__selected-item">
+                    <span class="city-modal__selected-text">${city.name}</span>
+                    <button class="city-modal__selected-btn" onclick="removeCityFromModal('${city.id}', ${selectedCities})">
+                      <i class="city-modal__selected-icon bi bi-x"></i>
+                    </button>
+                </div>
+                `)
+
+        })
+    }
+
+
+    const removeCityFromModal = (cityID, selectedCities) => {
+        selectedCities = selectedCities.filter(city => city.id === cityID)
+
+        addCityToModal(selectedCities)
+
+    }
+
+
     cityModalOverlay.addEventListener('click', () => {
         hideModal('city-modal', 'city-modal--active')
     })
-
 
 })
