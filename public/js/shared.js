@@ -79,7 +79,6 @@ window.addEventListener('load', () => {
         modalSelectedCitiesCotainer.innerHTML = ''
 
         selectedCities.forEach(city => {
-            console.log(city.name);
             modalSelectedCitiesCotainer.insertAdjacentHTML('beforeend', `
                 <div class="city-modal__selected-item">
                     <span class="city-modal__selected-text">${city.name}</span>
@@ -100,16 +99,63 @@ window.addEventListener('load', () => {
 
     const showProvinces = (cities) => {
         const citiesModalList = document.querySelector('#city_modal_list')
-        cities.innerHTML = ''
+        citiesModalList.innerHTML = ''
 
         cities.provinces.forEach(province => {
             citiesModalList.insertAdjacentHTML('beforeend', `
-                <li class="city-modal__cities-item province-item" data-province-id="${province.id}">
+                <li 
+                    class="city-modal__cities-item province-item" 
+                    data-province-id="${province.id}"
+                >
                     <span>${province.name}</span>
                     <i class="city-modal__cities-icon bi bi-chevron-left"></i>
                 </li>
             `)
         })
+
+        const provinceItems = document.querySelectorAll('.province-item')
+        provinceItems.forEach(province => {
+            province.addEventListener('click', (event) => {
+                const provinceID = event.target.dataset.provinceId
+                const provinceName = event.target.querySelector('span').innerHTML
+                const provinceCities = cities.cities.filter(provinceCity => provinceCity.province_id === Number(provinceID))
+
+                citiesModalList.innerHTML = ''
+                citiesModalList.insertAdjacentHTML('beforeend', `
+                    <li id="city_modal_all_province" class="city_modal_all_province">
+                      <span>همه شهر ها</span>
+                      <i class="bi bi-arrow-right-short"></i>
+                    </li>
+                    <li class="city-modal__cities-item select-all-city city-item">
+                      <span>همه شهر های ${provinceName} </span>
+                      <div id="checkboxShape"></div>
+                      <input type="checkbox" />
+                    </li>
+                `)
+
+                provinceCities.forEach(city => {
+                    const isCitySelected = selectedCities.some(selectedCity => selectedCity.name === city.name)
+
+                    citiesModalList.insertAdjacentHTML('beforeend', `
+                        <li class="city-modal__cities-item city-item" id="city-${city.id}">
+                          <span>${city.name}</span>
+                          <div id="checkboxShape" class="${isCitySelected && "active"}"></div>
+                          <input id="city-item-checkbox" type="checkbox" checked="${isCitySelected}" />
+                        </li>
+                    `)
+                })
+
+                const backToCityModalAllProvinces = document.querySelector('#city_modal_all_province')
+                backToCityModalAllProvinces.addEventListener('click', () => {
+                    citiesModalList.innerHTML = ''
+                    showProvinces(cities)
+                })
+
+            })
+        })
+
+
+
     }
 
 
