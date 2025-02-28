@@ -1,4 +1,4 @@
-import { getParamFromURL } from "./utils.js"
+import { getFromLocalStorage, getParamFromURL, saveInLocalStorage } from "./utils.js"
 
 const baseUrl = "https://divarapi.liara.run"
 
@@ -56,10 +56,58 @@ const getCategories = async () => {
 }
 
 
+const getAndShowHeaderCityLocations = () => {
+    const headerCityTitle = document.querySelector('#header-city-title')
+
+    const cities = getFromLocalStorage('cities')
+    // Default City
+    if (!cities.length) {
+        saveInLocalStorage('cities', [{ name: 'تهران', id: 301 }])
+    } else {
+        if (cities.length === 1) {
+            headerCityTitle.innerHTML = cities[0].name;
+
+        } else {
+            headerCityTitle.innerHTML = `${cities.length} شهر`;
+        }
+    }
+
+}
+
+
+const addCityToModal = (selectedCities) => {
+    const modalSelectedCitiesCotainer = document.querySelector('#city-selected')
+    modalSelectedCitiesCotainer.innerHTML = ''
+
+    selectedCities.forEach(city => {
+        console.log(city.name);
+        modalSelectedCitiesCotainer.insertAdjacentHTML('beforeend', `
+            <div class="city-modal__selected-item">
+                <span class="city-modal__selected-text">${city.name}</span>
+                <button class="city-modal__selected-btn" onclick="removeCityFromModal('${city.id}', ${selectedCities})">
+                  <i class="city-modal__selected-icon bi bi-x"></i>
+                </button>
+            </div>
+            `)
+
+    })
+}
+
+
+const removeCityFromModal = (cityID, selectedCities) => {
+    selectedCities = selectedCities.filter(city => city.id === cityID)
+
+    addCityToModal(selectedCities)
+
+}
+
+
 export {
     baseUrl,
     getAllCities,
     showSocialMedias,
     getPosts,
     getCategories,
+    getAndShowHeaderCityLocations,
+    addCityToModal,
 }

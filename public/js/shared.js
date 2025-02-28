@@ -1,16 +1,20 @@
-import { showSocialMedias } from "../../utils/shared.js";
-import { addParamToURL, getParamFromURL, hideModal, removeParamFromURL, showModal } from "../../utils/utils.js";
+import { addCityToModal, getAndShowHeaderCityLocations, showSocialMedias } from "../../utils/shared.js";
+import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, showModal } from "../../utils/utils.js";
 
 
 window.addEventListener('load', () => {
     showSocialMedias()
+    getAndShowHeaderCityLocations()
+
 
     const globalSearchInput = document.querySelector('#global_search_input')
     const removeSearchValueIcon = document.querySelector('#remove-search-value-icon')
     const searchbarModalOverlay = document.querySelector(".searchbar__modal-overlay")
     const mostSearchedList = document.querySelector('#most_searched')
-    const minPriceSelectbox = document.querySelector('#min-price-selectbox')
-    const maxPriceSelectbox = document.querySelector('#max-price-selectbox')
+    const headerCityContainer = document.querySelector('.header__city')
+    const cityModalOverlay = document.querySelector('.city-modal__overlay')
+
+    let selectedCities = []
 
     const searchValue = getParamFromURL('search')
 
@@ -19,7 +23,7 @@ window.addEventListener('load', () => {
         globalSearchInput.value = searchValue
     }
 
-    removeSearchValueIcon.addEventListener('click', () => {
+    removeSearchValueIcon?.addEventListener('click', () => {
         removeParamFromURL('search')
     })
 
@@ -55,6 +59,21 @@ window.addEventListener('load', () => {
         mostSearchedList.innerHTML = ''
     })
 
-    
+    headerCityContainer.addEventListener('click', (event) => {
+        showModal('city-modal', 'city-modal--active')
+        
+        const cities = getFromLocalStorage('cities')
+        const deleteCitiesBtn = document.querySelector('#delete-all-cities')
+        deleteCitiesBtn.style.display = 'block'
+
+        selectedCities = cities
+        addCityToModal(selectedCities)
+
+    })
+
+    cityModalOverlay.addEventListener('click', () => {
+        hideModal('city-modal', 'city-modal--active')
+    })
+
 
 })

@@ -91,9 +91,7 @@ window.addEventListener('load', () => {
         filteredPosts = filteredPosts.filter(post => {
           return post.dynamicFields.some(field => field.slug === slug && field.data === appliedDynamicFilters[slug])
         })
-
       }
-
     }
 
 
