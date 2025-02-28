@@ -82,7 +82,7 @@ window.addEventListener('load', () => {
             modalSelectedCitiesCotainer.insertAdjacentHTML('beforeend', `
                 <div class="city-modal__selected-item">
                     <span class="city-modal__selected-text">${city.name}</span>
-                    <button class="city-modal__selected-btn" onclick="removeCityFromModal('${city.id}', ${selectedCities})">
+                    <button class="city-modal__selected-btn" onclick="removeCityFromModal('${city.id}')">
                       <i class="city-modal__selected-icon bi bi-x"></i>
                     </button>
                 </div>
@@ -92,10 +92,11 @@ window.addEventListener('load', () => {
     }
 
 
-    const removeCityFromModal = (cityID, selectedCities) => {
-        selectedCities = selectedCities.filter(city => city.id === cityID)
-
-        addCityToModal(selectedCities)
+    const removeCityFromModal = (cityID) => {
+        // selectedCities = selectedCities.filter(city => city.id === cityID)
+        // addCityToModal(selectedCities)
+        console.log('Remove');
+        
 
     }
 
@@ -103,5 +104,11 @@ window.addEventListener('load', () => {
     cityModalOverlay.addEventListener('click', () => {
         hideModal('city-modal', 'city-modal--active')
     })
+
+
+
+
+    // Bind
+    window.removeCityFromModal = removeCityFromModal
 
 })
