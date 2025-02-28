@@ -89,6 +89,7 @@ const getAndShowHeaderCityLocations = () => {
 export {
     baseUrl,
     getAllCities,
+    getAllLocations,
     showSocialMedias,
     getPosts,
     getCategories,

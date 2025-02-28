@@ -1,4 +1,4 @@
-import { getAndShowHeaderCityLocations, showSocialMedias } from "../../utils/shared.js";
+import { getAllLocations, getAndShowHeaderCityLocations, showSocialMedias } from "../../utils/shared.js";
 import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, showModal } from "../../utils/utils.js";
 
 
@@ -15,6 +15,7 @@ window.addEventListener('load', () => {
     const cityModalOverlay = document.querySelector('.city-modal__overlay')
 
     let selectedCities = []
+    let allCities = []
 
     const searchValue = getParamFromURL('search')
 
@@ -91,12 +92,30 @@ window.addEventListener('load', () => {
         })
     }
 
+    getAllLocations().then(data => {
+        allCities = data
+        showProvinces(allCities)
+    })
+
+
+    const showProvinces = (cities) => {
+        const citiesModalList = document.querySelector('#city_modal_list')
+        cities.innerHTML = ''
+
+        cities.provinces.forEach(province => {
+            citiesModalList.insertAdjacentHTML('beforeend', `
+                <li class="city-modal__cities-item province-item" data-province-id="${province.id}">
+                    <span>${province.name}</span>
+                    <i class="city-modal__cities-icon bi bi-chevron-left"></i>
+                </li>
+            `)
+        })
+    }
+
 
     const removeCityFromModal = (cityID) => {
-        // selectedCities = selectedCities.filter(city => city.id === cityID)
-        // addCityToModal(selectedCities)
         console.log('Remove');
-        
+
 
     }
 
