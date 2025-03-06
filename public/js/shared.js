@@ -103,6 +103,8 @@ window.addEventListener('load', () => {
 
     const showProvinces = (cities) => {
         const citiesModalList = document.querySelector('#city_modal_list')
+        const citiesModalCities = document.querySelector('.city-modal__cities')
+        citiesModalCities.scrollTo(0, 0)
         citiesModalList.innerHTML = ''
 
         cities.provinces.forEach(province => {
