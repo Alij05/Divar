@@ -1,5 +1,5 @@
 import { getAllLocations, getAndShowHeaderCityLocations, showSocialMedias } from "../../utils/shared.js";
-import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, showModal } from "../../utils/utils.js";
+import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, saveInLocalStorage, showModal } from "../../utils/utils.js";
 
 
 window.addEventListener('load', () => {
@@ -15,6 +15,7 @@ window.addEventListener('load', () => {
     const deleteAllSelectedCitiesBtn = document.querySelector('#delete-all-cities')
     const cityModalOverlay = document.querySelector('.city-modal__overlay')
     const cityModalAcceptBtn = document.querySelector('.city-modal__accept')
+    const cityModalCancelBtn = document.querySelector('.city-modal__close')
     const cityModalError = document.querySelector('#city_modal_error')
 
 
@@ -217,11 +218,6 @@ window.addEventListener('load', () => {
             cityModalError.style.display = 'block'
         }
 
-
-
-
-
-
     }
 
 
@@ -237,6 +233,22 @@ window.addEventListener('load', () => {
     })
 
 
+
+    cityModalAcceptBtn?.addEventListener('click', () => {
+        saveInLocalStorage('cities', selectedCities)
+        // Get Cities ID's for Getting All Cities Post's From Server With CityID
+        const citiesIDs = selectedCities.map(city => city.id).join('|')
+        addParamToURL('cities', citiesIDs)
+        getAndShowHeaderCityLocations()
+        hideModal('city-modal', 'city-modal--active')
+        showProvinces(allCities)
+    })
+
+    cityModalCancelBtn?.addEventListener('click', () => {
+        hideModal('city-modal', 'city-modal--active')
+        showProvinces(allCities)
+        cityModalAcceptBtn.classList.replace('city-modal__accept--active', "city-modal__accept")
+    })
 
 
     // Bind
