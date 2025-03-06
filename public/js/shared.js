@@ -12,7 +12,11 @@ window.addEventListener('load', () => {
     const searchbarModalOverlay = document.querySelector(".searchbar__modal-overlay")
     const mostSearchedList = document.querySelector('#most_searched')
     const headerCityContainer = document.querySelector('.header__city')
+    const deleteAllSelectedCitiesBtn = document.querySelector('#delete-all-cities')
     const cityModalOverlay = document.querySelector('.city-modal__overlay')
+    const cityModalAcceptBtn = document.querySelector('.city-modal__accept')
+    const cityModalError = document.querySelector('#city_modal_error')
+
 
     let selectedCities = []
     let allCities = []
@@ -66,8 +70,7 @@ window.addEventListener('load', () => {
         showModal('city-modal', 'city-modal--active')
 
         const cities = getFromLocalStorage('cities')
-        const deleteCitiesBtn = document.querySelector('#delete-all-cities')
-        deleteCitiesBtn.style.display = 'block'
+        deleteAllSelectedCitiesBtn.style.display = 'block'
 
         selectedCities = cities
         addCityToModal(selectedCities)
@@ -181,9 +184,10 @@ window.addEventListener('load', () => {
             checkboxShapeElement.classList.add('active')
         } else {
             selectedCities = selectedCities.filter(city => city.name !== cityName)
-            addCityToModal(selectedCities)
             checkbox.checked = true
             checkboxShapeElement.classList.remove('active')
+            addCityToModal(selectedCities)
+            toggleCityModalBtns(selectedCities)
         }
 
 
@@ -195,7 +199,28 @@ window.addEventListener('load', () => {
         if (!isCityExist) {
             selectedCities.push({ name: cityName, id: cityID })
             addCityToModal(selectedCities)
+            toggleCityModalBtns(selectedCities)
         }
+
+    }
+
+
+    const toggleCityModalBtns = (cities) => {
+        if (cities.length) {
+            cityModalAcceptBtn.classList.replace('city-modal__accept', "city-modal__accept--active")
+            deleteAllSelectedCitiesBtn.style.display = 'block'
+            cityModalError.style.display = 'none'
+
+        } else {
+            cityModalAcceptBtn.classList.replace('city-modal__accept--active', "city-modal__accept")
+            deleteAllSelectedCitiesBtn.style.display = 'none'
+            cityModalError.style.display = 'block'
+        }
+
+
+
+
+
 
     }
 
