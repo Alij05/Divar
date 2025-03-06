@@ -174,7 +174,6 @@ window.addEventListener('load', () => {
             if (city.name === cityName) {
                 checkbox.checked = true
                 checkboxShapeElement.classList.add('active')
-
             }
         })
 
@@ -222,17 +221,25 @@ window.addEventListener('load', () => {
 
 
     const removeCityFromModal = (cityID) => {
-        console.log('Remove');
+        const cityElement = document.querySelector(`#city-${cityID}`)
+        const checkboxShapeElement = cityElement.querySelector('div')
 
+        checkboxShapeElement.classList.remove('active')
+        selectedCities = selectedCities.filter(city => city.id !== cityID)
+        addCityToModal(selectedCities)
+        toggleCityModalBtns(selectedCities)
 
     }
 
 
+
+//! Events
+
     cityModalOverlay.addEventListener('click', () => {
         hideModal('city-modal', 'city-modal--active')
+        showProvinces(allCities)
+        cityModalAcceptBtn.classList.replace('city-modal__accept--active', "city-modal__accept")
     })
-
-
 
     cityModalAcceptBtn?.addEventListener('click', () => {
         saveInLocalStorage('cities', selectedCities)
