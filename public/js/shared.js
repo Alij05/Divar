@@ -8,6 +8,7 @@ window.addEventListener('load', () => {
 
 
     const citiesModalList = document.querySelector('#city_modal_list')
+    const modalSelectedCitiesCotainer = document.querySelector('#city-selected')
     const globalSearchInput = document.querySelector('#global_search_input')
     const removeSearchValueIcon = document.querySelector('#remove-search-value-icon')
     const searchbarModalOverlay = document.querySelector(".searchbar__modal-overlay")
@@ -81,7 +82,6 @@ window.addEventListener('load', () => {
     })
 
     const addCityToModal = (selectedCities) => {
-        const modalSelectedCitiesCotainer = document.querySelector('#city-selected')
         modalSelectedCitiesCotainer.innerHTML = ''
 
         selectedCities.forEach(city => {
@@ -122,6 +122,7 @@ window.addEventListener('load', () => {
 
         const provinceItems = document.querySelectorAll('.province-item')
         provinceItems.forEach(province => {
+
             province.addEventListener('click', (event) => {
                 const provinceID = event.target.dataset.provinceId
                 const provinceName = event.target.querySelector('span').innerHTML
@@ -132,10 +133,10 @@ window.addEventListener('load', () => {
                       <span>همه شهر ها</span>
                       <i class="bi bi-arrow-right-short"></i>
                     </li>
-                    <li class="city-modal__cities-item select-all-city city-item">
+                    <li class="city-modal__cities-item select-all-city city-item" id="province-${provinceID}" onclick="selectAllCitiesOfProvince('${provinceID}')">
                       <span>همه شهر های ${provinceName} </span>
                       <div id="checkboxShape"></div>
-                      <input type="checkbox" />
+                      <input type="checkbox" checked=""/>
                     </li>
                 `)
 
@@ -163,6 +164,79 @@ window.addEventListener('load', () => {
         })
 
 
+
+    }
+
+
+    window.selectAllCitiesOfProvince = (provinceID) => {
+        const provinceElement = document.querySelector(`#province-${provinceID}`)
+        const checkbox = provinceElement.querySelector('input')
+        const checkboxShapeElement = provinceElement.querySelector('div')
+        const provinceName = provinceElement.querySelector('span').innerHTML
+
+        const allCitiesOfProvinceElements = document.querySelectorAll('.city-item')
+
+        modalSelectedCitiesCotainer.innerHTML = ''
+
+        checkbox.checked = !checkbox.checked
+
+        if (checkbox.checked) {
+            checkboxShapeElement.classList.add('active')
+            checkbox.checked = false
+
+            selectedCities.forEach(city => {
+                modalSelectedCitiesCotainer.insertAdjacentHTML('beforeend', `
+                    <div class="city-modal__selected-item">
+                        <span class="city-modal__selected-text">${city.name}</span>
+                        <button class="city-modal__selected-btn" onclick="removeCityFromModal('${city.id}')">
+                        <i class="city-modal__selected-icon bi bi-x"></i>
+                        </button>
+                    </div>
+                    `)
+            })
+
+            let allCitiesOfProvince = []
+            allCitiesOfProvince = allCities.cities.filter(city => city.province_id === Number(provinceID))
+            selectedCities = selectedCities.concat(allCitiesOfProvince)
+            console.log(selectedCities);
+
+
+            modalSelectedCitiesCotainer.insertAdjacentHTML('beforeend', `
+                <div class="city-modal__selected-item">
+                    <span class="city-modal__selected-text">${provinceName}</span>
+                    <button class="city-modal__selected-btn" onclick="removeCityFromModal('${provinceID}')">
+                      <i class="city-modal__selected-icon bi bi-x"></i>
+                    </button>
+                </div>
+                `)
+
+
+
+            allCitiesOfProvinceElements.forEach(cityElement => {
+                const checkboxCityShapeElement = cityElement.querySelector('div')
+
+                checkboxCityShapeElement.classList.add('active')
+            })
+
+            toggleCityModalBtns(selectedCities)
+
+        } else {
+            checkboxShapeElement.classList.remove('active')
+            checkbox.checked = true
+            selectedCities = selectedCities.filter(city => city.province_id !== Number(provinceID))
+            console.log(selectedCities);
+
+
+            allCitiesOfProvinceElements.forEach(cityElement => {
+                const checkboxCityShapeElement = cityElement.querySelector('div')
+
+                checkboxCityShapeElement.classList.remove('active')
+            })
+
+            addCityToModal(selectedCities)
+            toggleCityModalBtns(selectedCities)
+
+        }
 
     }
 
