@@ -263,6 +263,14 @@ window.addEventListener('load', () => {
         cityModalAcceptBtn.classList.replace('city-modal__accept--active', "city-modal__accept")
     })
 
+    deleteAllSelectedCitiesBtn.addEventListener('click', () => {
+        selectedCities = []
+        showProvinces(allCities)
+        addCityToModal(selectedCities)
+        deleteAllSelectedCitiesBtn.style.display = 'none'
+        cityModalError.style.display = 'block'
+    })
+
 
     // Bind
     window.removeCityFromModal = removeCityFromModal
