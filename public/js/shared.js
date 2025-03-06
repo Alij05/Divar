@@ -7,6 +7,7 @@ window.addEventListener('load', () => {
     getAndShowHeaderCityLocations()
 
 
+    const citiesModalList = document.querySelector('#city_modal_list')
     const globalSearchInput = document.querySelector('#global_search_input')
     const removeSearchValueIcon = document.querySelector('#remove-search-value-icon')
     const searchbarModalOverlay = document.querySelector(".searchbar__modal-overlay")
@@ -17,6 +18,7 @@ window.addEventListener('load', () => {
     const cityModalAcceptBtn = document.querySelector('.city-modal__accept')
     const cityModalCancelBtn = document.querySelector('.city-modal__close')
     const cityModalError = document.querySelector('#city_modal_error')
+    const cityModalSearchInput = document.querySelector('#city-modal-search-input')
 
 
     let selectedCities = []
@@ -102,7 +104,6 @@ window.addEventListener('load', () => {
 
 
     const showProvinces = (cities) => {
-        const citiesModalList = document.querySelector('#city_modal_list')
         const citiesModalCities = document.querySelector('.city-modal__cities')
         citiesModalCities.scrollTo(0, 0)
         citiesModalList.innerHTML = ''
@@ -271,6 +272,35 @@ window.addEventListener('load', () => {
         addCityToModal(selectedCities)
         deleteAllSelectedCitiesBtn.style.display = 'none'
         cityModalError.style.display = 'block'
+    })
+
+    cityModalSearchInput.addEventListener('keyup', (event) => {
+        const searchedCities = allCities.cities.filter(city => city.name.startsWith(event.target.value))
+        console.log(searchedCities);
+
+        if (event.target.value.trim() && searchedCities.length) {
+            citiesModalList.innerHTML = ''
+
+            searchedCities.forEach(city => {
+                const isCitySelected = selectedCities.some(selectedCity => selectedCity.name === city.name)
+                citiesModalList.insertAdjacentHTML('beforeend', `
+                    <li class="city-modal__cities-item city-item" id="city-${city.id}">
+                      <span>${city.name}</span>
+                      <div id="checkboxShape" class="${isCitySelected && "active"}"></div>
+                      <input id="city-item-checkbox" type="checkbox" checked="${isCitySelected}" onchange="cityItemClickHandler('${city.id}')"/>
+                    </li>
+                `)
+
+            })
+
+        } else if (event.target.value.trim() === "") {
+            citiesModalList.innerHTML = ''
+            showProvinces(allCities)
+
+        } else {
+            citiesModalList.innerHTML = '<div style="display: flex; align-items:center; justify-content: center; margin-top: 40px; font-size: 20px;">شهر مورد نظر یافت نشد :(</div>'
+        }
+
     })
 
 
