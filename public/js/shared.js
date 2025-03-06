@@ -222,9 +222,15 @@ window.addEventListener('load', () => {
 
     const removeCityFromModal = (cityID) => {
         const cityElement = document.querySelector(`#city-${cityID}`)
-        const checkboxShapeElement = cityElement.querySelector('div')
 
-        checkboxShapeElement.classList.remove('active')
+        if (cityElement) {
+            const checkboxShapeElement = cityElement.querySelector('div')
+            const checkbox = cityElement.querySelector('input')
+
+            checkbox.checked = false
+            checkboxShapeElement.classList.remove('active')
+        }
+
         selectedCities = selectedCities.filter(city => city.id !== cityID)
         addCityToModal(selectedCities)
         toggleCityModalBtns(selectedCities)
@@ -233,7 +239,7 @@ window.addEventListener('load', () => {
 
 
 
-//! Events
+    //! Events
 
     cityModalOverlay.addEventListener('click', () => {
         hideModal('city-modal', 'city-modal--active')
