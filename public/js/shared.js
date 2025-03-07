@@ -21,65 +21,14 @@ window.addEventListener('load', () => {
     const cityModalError = document.querySelector('#city_modal_error')
     const cityModalSearchInput = document.querySelector('#city-modal-search-input')
 
-
     let selectedCities = []
     let allCities = []
 
     const searchValue = getParamFromURL('search')
-
     if (searchValue) {
         removeSearchValueIcon.style.display = 'block'
         globalSearchInput.value = searchValue
     }
-
-    removeSearchValueIcon?.addEventListener('click', () => {
-        removeParamFromURL('search')
-    })
-
-    globalSearchInput?.addEventListener('keyup', (event) => {
-        if (event.keyCode === 13) {
-            if (event.target.value.trim()) {
-                addParamToURL('search', event.target.value.trim())
-            }
-        }
-    })
-
-
-    // Handle User Category Search
-    const mostSearchKeyWords = ["ماشین", "ساعت", "موبایل", "لپ تاپ", "تلویزیون"];
-    globalSearchInput.addEventListener('focus', () => {
-        showModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
-
-        mostSearchKeyWords.forEach(keyWord => {
-            const categoryID = getParamFromURL('categoryID')
-            // handle the most searched value Seletion in Category
-            let href = `posts.html?search=${keyWord}${categoryID ? `&categoryID=${categoryID}` : ``}
-`
-            mostSearchedList.insertAdjacentHTML('beforeend', `
-                <li class="header__searchbar-dropdown-item" style="cursor: pointer;">
-                    <a href="${href}" class="header__searchbar-dropdown-link">${keyWord}</a>
-                </li>
-                `)
-        })
-    })
-
-    searchbarModalOverlay.addEventListener('click', () => {
-        hideModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
-        mostSearchedList.innerHTML = ''
-    })
-
-
-    // Handle City Modal 
-    headerCityContainer.addEventListener('click', (event) => {
-        showModal('city-modal', 'city-modal--active')
-
-        const cities = getFromLocalStorage('cities')
-        deleteAllSelectedCitiesBtn.style.display = 'block'
-
-        selectedCities = cities
-        addCityToModal(selectedCities)
-
-    })
 
     const addCityToModal = (selectedCities) => {
         modalSelectedCitiesCotainer.innerHTML = ''
@@ -198,13 +147,11 @@ window.addEventListener('load', () => {
             let allCitiesOfProvince = []
             allCitiesOfProvince = allCities.cities.filter(city => city.province_id === Number(provinceID))
             selectedCities = selectedCities.concat(allCitiesOfProvince)
-            console.log(selectedCities);
-
 
             modalSelectedCitiesCotainer.insertAdjacentHTML('beforeend', `
                 <div class="city-modal__selected-item">
                     <span class="city-modal__selected-text">${provinceName}</span>
-                    <button class="city-modal__selected-btn" onclick="removeCityFromModal('${provinceID}')">
+                    <button class="city-modal__selected-btn" onclick="removeAllCityOfProvincesFromModal('${provinceID}')">
                       <i class="city-modal__selected-icon bi bi-x"></i>
                     </button>
                 </div>
@@ -224,7 +171,6 @@ window.addEventListener('load', () => {
             checkboxShapeElement.classList.remove('active')
             checkbox.checked = true
             selectedCities = selectedCities.filter(city => city.province_id !== Number(provinceID))
-            console.log(selectedCities);
 
 
             allCitiesOfProvinceElements.forEach(cityElement => {
@@ -314,9 +260,61 @@ window.addEventListener('load', () => {
 
     }
 
+    window.removeAllCityOfProvincesFromModal = (provincID) => {
+        selectedCities = selectedCities.filter(city => city.province_id ? city.province_id === provincID : {})
+        // selectAllCitiesOfProvince(provincID)
+    }
+
 
 
     //! Events
+
+    removeSearchValueIcon?.addEventListener('click', () => {
+        removeParamFromURL('search')
+    })
+
+    globalSearchInput?.addEventListener('keyup', (event) => {
+        if (event.keyCode === 13) {
+            if (event.target.value.trim()) {
+                addParamToURL('search', event.target.value.trim())
+            }
+        }
+    })
+
+    // Handle User Category Search
+    const mostSearchKeyWords = ["ماشین", "ساعت", "موبایل", "لپ تاپ", "تلویزیون"];
+    globalSearchInput.addEventListener('focus', () => {
+        showModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
+
+        mostSearchKeyWords.forEach(keyWord => {
+            const categoryID = getParamFromURL('categoryID')
+            // handle the most searched value Seletion in Category
+            let href = `posts.html?search=${keyWord}${categoryID ? `&categoryID=${categoryID}` : ``}
+ `
+            mostSearchedList.insertAdjacentHTML('beforeend', `
+                 <li class="header__searchbar-dropdown-item" style="cursor: pointer;">
+                     <a href="${href}" class="header__searchbar-dropdown-link">${keyWord}</a>
+                 </li>
+                 `)
+        })
+    })
+
+    searchbarModalOverlay.addEventListener('click', () => {
+        hideModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
+        mostSearchedList.innerHTML = ''
+    })
+
+    // Handle City Modal 
+    headerCityContainer.addEventListener('click', (event) => {
+        showModal('city-modal', 'city-modal--active')
+
+        const cities = getFromLocalStorage('cities')
+        deleteAllSelectedCitiesBtn.style.display = 'block'
+
+        selectedCities = cities
+        addCityToModal(selectedCities)
+
+    })
 
     cityModalOverlay.addEventListener('click', () => {
         hideModal('city-modal', 'city-modal--active')
