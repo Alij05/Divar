@@ -10,26 +10,25 @@ window.addEventListener('load', () => {
   let backupPosts = null
   let appliedDynamicFilters = {}
 
-
+  
   // Title of Tab
-  if(cities.length === 1) {
+  if (cities.length === 1) {
     document.title = `دیوار ${cities[0].name} : مرجع خرید و فروش اجناس نو و دسته دو`
   } else {
     document.title = `دیوار ${cities.length} شهر : مرجع خرید و فروش اجناس نو و دسته دو`
   }
+  
+  const citiesIDs = cities.map(city => city.id).join('|')
+  getPosts(citiesIDs).then(response => {
+    // Website Loader
+    loadingContainer.style.display = 'none'
 
-  cities.forEach(city => {
-    getPosts(city.id).then(response => {
-      // Website Loader
-      loadingContainer.style.display = 'none'
-
-      posts = response.data.posts
-      backupPosts = response.data.posts
-      generatePosts(posts)
-
-    })
+    posts = response.data.posts
+    backupPosts = response.data.posts
+    generatePosts(posts)
 
   })
+
 
 
   getCategories().then(response => {
