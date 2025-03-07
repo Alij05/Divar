@@ -21,6 +21,12 @@ window.addEventListener('load', () => {
     const cityModalError = document.querySelector('#city_modal_error')
     const cityModalSearchInput = document.querySelector('#city-modal-search-input')
 
+    const headerCategoryBtn = document.querySelector('.header__category-btn')
+    const categoryModalOverlay = document.querySelector('.category_modal_overlay')
+    const headerCategoryMenu = document.querySelector('#header__category-menu')
+    const allModalCategoriesPosts = document.querySelector('#all-categories-posts')
+
+
     let selectedCities = []
     let allCities = []
 
@@ -269,6 +275,8 @@ window.addEventListener('load', () => {
 
     //! Events
 
+    //* Cities Modal
+
     removeSearchValueIcon?.addEventListener('click', () => {
         removeParamFromURL('search')
     })
@@ -374,6 +382,22 @@ window.addEventListener('load', () => {
         }
 
     })
+
+
+    //* Categories Modal
+    
+    headerCategoryBtn?.addEventListener('click', () => {
+        showModal('header__category-menu', 'header__category-menu--active')
+    })
+
+    categoryModalOverlay?.addEventListener('click', () => {
+        hideModal('header__category-menu', 'header__category-menu--active')
+    })
+
+    allModalCategoriesPosts?.addEventListener('click', () => {
+        removeParamFromURL('categoryID')
+    })
+
 
 
     // Bind
