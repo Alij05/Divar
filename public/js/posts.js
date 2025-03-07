@@ -3,12 +3,21 @@ import { addParamToURL, removeParamFromURL, getParamFromURL, calculateRelativeTi
 
 window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
+
+  const cities = getFromLocalStorage('cities')
+
   let posts = null
   let backupPosts = null
   let appliedDynamicFilters = {}
 
 
-  const cities = getFromLocalStorage('cities')
+  // Title of Tab
+  if(cities.length === 1) {
+    document.title = `دیوار ${cities[0].name} : مرجع خرید و فروش اجناس نو و دسته دو`
+  } else {
+    document.title = `دیوار ${cities.length} شهر : مرجع خرید و فروش اجناس نو و دسته دو`
+  }
+
   cities.forEach(city => {
     getPosts(city.id).then(response => {
       // Website Loader
