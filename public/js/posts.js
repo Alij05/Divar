@@ -120,7 +120,7 @@ window.addEventListener('load', () => {
 
         postsContainer.insertAdjacentHTML('beforeend', `
             <div class="col-4">
-              <a href="post.html/id=${post._id}" class="product-card">
+              <a href="post.html?id=${post._id}" class="product-card">
                 <div class="product-card__right">
                   <div class="product-card__right-top">
                     <p class="product-card__link">${post.title}</p>

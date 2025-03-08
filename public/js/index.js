@@ -10,12 +10,6 @@ window.addEventListener("load", () => {
   const loadingContainer = document.querySelector('#loading-container')
   const searchInput = document.querySelector('#search-input')
 
-  // let isCitySelected = getFromLocalStorage('city')
-  // console.log(isCitySelected);
-  // if (isCitySelected) {
-  //   location.href = './pages/posts.html'
-  // }
-
 
   getAllCities().then((response) => {
     cities = response.data.cities
