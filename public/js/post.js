@@ -1,5 +1,5 @@
 import { getPostDetails } from "../../utils/shared.js"
-import { calculateRelativeTimeDifference, isLogin } from "../../utils/utils.js"
+import { calculateRelativeTimeDifference, isLogin, showModal, showSwal } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
@@ -21,6 +21,7 @@ window.addEventListener('load', () => {
     const secondSlider = document.querySelector("#secend-slider-wrapper");
     const noteTextarea = document.querySelector("#note-textarea");
     const postFeedbackIcons = document.querySelectorAll(".post_feedback_icon");
+    const phoneInfoBtn = document.querySelector("#phone-info-btn");
 
     const isUserLogin = isLogin()
 
@@ -29,6 +30,7 @@ window.addEventListener('load', () => {
     postDescription.innerHTML = post.description
     const date = calculateRelativeTimeDifference(post.createdAt)
     postLocation.innerHTML = `${date} در ${post.city.name} ${post.neighborhood ? `، ${post.neighborhood.name}` : ''}`
+
     postBreadcrumb.insertAdjacentHTML('beforeend', `
             <li class="main__breadcrumb-item">
               <a href='/pages/posts.html?categoryID=${post.breadcrumbs.category._id}' id="category-breadcrumb">${post.breadcrumbs.category.title}</a>
@@ -68,6 +70,15 @@ window.addEventListener('load', () => {
 
     shareIcon.addEventListener('click', async () => {
       await navigator.share(location.href)
+    })
+
+    phoneInfoBtn.addEventListener('click', () => {
+      showSwal(`
+        شماره تماس : ${post.creator.phone}`,
+        null,
+        'تماس گرفتن',
+        () => { }
+      )
     })
 
 

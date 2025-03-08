@@ -67,7 +67,17 @@ const showModal = (id, className) => {
 const hideModal = (id, className) => {
     const element = document.querySelector(`#${id}`)
     element.classList.remove(className)
-    
+
+}
+
+const showSwal = (title, icon, buttons, callback) => {
+    swal({
+        title,
+        icon,
+        buttons
+    }).then((result) => {
+        callback(result)
+    })
 }
 
 const isLogin = () => {
@@ -84,5 +94,6 @@ export {
     calculateRelativeTimeDifference,
     showModal,
     hideModal,
+    showSwal,
     isLogin,
 }
