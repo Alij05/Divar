@@ -64,6 +64,9 @@ window.addEventListener('load', () => {
     getCategories().then(response => {
         allCategories = response.data.categories
         showCategories(allCategories)
+
+        // to Show the First Category and SubCategories By Default, We Call the Function for First Category
+        showActiveCategorySubs(allCategories[0]._id)
     })
 
 
@@ -309,10 +312,10 @@ window.addEventListener('load', () => {
             categoryResults.insertAdjacentHTML('beforeend', `
                 <div>
                     <ul class="header__category-dropdown-list">
-                        <div class="header__category-dropdown-title">${subCategory.title}</div>
+                        <div class="header__category-dropdown-title" onclick="categoryClickHandler('${subCategory._id}')">${subCategory.title}</div>
                         ${subCategory.subCategories.map(subSubCategory => `
                             <li class="header__category-dropdown-item">
-                                <div class="header__category-dropdown-link">${subSubCategory.title}</div>
+                                <div class="header__category-dropdown-link" onclick="categoryClickHandler('${subSubCategory._id}')">${subSubCategory.title}</div>
                             </li>
                             `).join("")}
                     </ul>
@@ -320,6 +323,11 @@ window.addEventListener('load', () => {
                 `)
         })
 
+    }
+
+
+    window.categoryClickHandler = (categoryID) => {
+        addParamToURL('categoryID', categoryID)
     }
 
 
