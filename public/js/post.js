@@ -1,27 +1,35 @@
 import { getPostDetails } from "../../utils/shared.js"
-import { calculateRelativeTimeDifference } from "../../utils/utils.js"
+import { calculateRelativeTimeDifference, isLogin } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
-    const loadingContainer = document.querySelector('#loading-container')
-    // Website Loader
-    loadingContainer.style.display = 'none'
+  const loadingContainer = document.querySelector('#loading-container')
+  // Website Loader
+  loadingContainer.style.display = 'none'
 
-    getPostDetails().then(post => {
-        console.log(post);
-
-
-        const postTitle = document.querySelector('#post-title')
-        const postDescription = document.querySelector('#post-description')
-        const postLocation = document.querySelector('#post-location')
-        const postBreadcrumb = document.querySelector('#breadcrumb')
-        const shareIcon = document.querySelector('#share-icon')
+  getPostDetails().then(post => {
+    console.log(post);
 
 
-        postTitle.innerHTML = post.title
-        postDescription.innerHTML = post.description
-        const date = calculateRelativeTimeDifference(post.createdAt)
-        postLocation.innerHTML = `${date} در ${post.city.name} ${post.neighborhood ? `، ${post.neighborhood.name}` : ''}`
-        postBreadcrumb.insertAdjacentHTML('beforeend', `
+    const postTitle = document.querySelector('#post-title')
+    const postDescription = document.querySelector('#post-description')
+    const postLocation = document.querySelector('#post-location')
+    const postBreadcrumb = document.querySelector('#breadcrumb')
+    const shareIcon = document.querySelector('#share-icon')
+    const postInfosList = document.querySelector('#post-infoes-list')
+    const postPreview = document.querySelector("#post-preview");
+    const mainSlider = document.querySelector("#main-slider-wrapper");
+    const secondSlider = document.querySelector("#secend-slider-wrapper");
+    const noteTextarea = document.querySelector("#note-textarea");
+    const postFeedbackIcons = document.querySelectorAll(".post_feedback_icon");
+
+    const isUserLogin = isLogin()
+
+
+    postTitle.innerHTML = post.title
+    postDescription.innerHTML = post.description
+    const date = calculateRelativeTimeDifference(post.createdAt)
+    postLocation.innerHTML = `${date} در ${post.city.name} ${post.neighborhood ? `، ${post.neighborhood.name}` : ''}`
+    postBreadcrumb.insertAdjacentHTML('beforeend', `
             <li class="main__breadcrumb-item">
               <a href='/pages/posts.html?categoryID=${post.breadcrumbs.category._id}' id="category-breadcrumb">${post.breadcrumbs.category.title}</a>
               <i class="main__breadcrumb-icon bi bi-chevron-left"></i>
@@ -37,7 +45,23 @@ window.addEventListener('load', () => {
             <li class="main__breadcrumb-item">${post.title}</li>  
         `)
 
+    postInfosList.insertAdjacentHTML('beforeend', `
+          <li class="post__info-item">
+            <span class="post__info-key">قیمت</span>
+            <span class="post__info-value">${post.price.toLocaleString()} تومان</span>
+          </li>
+          `)
+
+    post.dynamicFields.forEach(field => {
+      postInfosList.insertAdjacentHTML('beforeend', `
+            <li class="post__info-item">
+              <span class="post__info-key">${field.name}</span>
+              <span class="post__info-value">${field.data}</span>
+            </li>
+            `)
     })
+
+
 
 
     //! Events
@@ -45,5 +69,8 @@ window.addEventListener('load', () => {
     shareIcon.addEventListener('click', async () => {
       await navigator.share(location.href)
     })
+
+
+  })
 
 })

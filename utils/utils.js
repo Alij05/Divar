@@ -70,6 +70,10 @@ const hideModal = (id, className) => {
     
 }
 
+const isLogin = () => {
+    return true
+}
+
 
 export {
     saveInLocalStorage,
@@ -80,4 +84,5 @@ export {
     calculateRelativeTimeDifference,
     showModal,
     hideModal,
+    isLogin,
 }
