@@ -1,5 +1,5 @@
 import { getPostDetails } from "../../utils/shared.js"
-import { calculateRelativeTimeDifference, isLogin, showModal, showSwal } from "../../utils/utils.js"
+import { calculateRelativeTimeDifference, hideModal, isLogin, showModal, showSwal } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
@@ -20,8 +20,10 @@ window.addEventListener('load', () => {
     const mainSlider = document.querySelector("#main-slider-wrapper");
     const secondSlider = document.querySelector("#secend-slider-wrapper");
     const noteTextarea = document.querySelector("#note-textarea");
+    const noteTrashIcon = document.querySelector("#note-trash-icon");
     const postFeedbackIcons = document.querySelectorAll(".post_feedback_icon");
     const phoneInfoBtn = document.querySelector("#phone-info-btn");
+    const loginModalOverlay = document.querySelector("#login_modal_overlay");
 
     const isUserLogin = isLogin()
 
@@ -81,6 +83,37 @@ window.addEventListener('load', () => {
       )
     })
 
+    postFeedbackIcons.forEach(icon => {
+      icon.addEventListener('click', () => {
+        postFeedbackIcons.forEach(icon => icon.classList.remove('active'))
+        icon.classList.add('active')
+      })
+    })
+
+    if (isUserLogin) {
+      noteTextarea.addEventListener('keyup', event => {
+        if (event.target.value.trim()) {
+          noteTrashIcon.style.display = 'block'
+        } else {
+          noteTrashIcon.style.display = 'none'
+        }
+
+        noteTrashIcon.addEventListener('click', () => {
+          noteTextarea.value = ''
+          noteTrashIcon.style.display = 'none'
+        })
+
+      })
+    } else {
+      noteTextarea.addEventListener('focus', (event) => {
+        event.preventDefault()
+        showModal('login-modal', 'login-modal--active')
+      })
+    }
+
+    loginModalOverlay.addEventListener('click', () => {
+      hideModal('login-modal', 'login-modal--active')
+    })
 
   })
 
