@@ -83,6 +83,14 @@ const getAndShowHeaderCityLocations = () => {
 }
 
 
+const getPostDetails = async () => {
+    const postID = getParamFromURL('id')
+    const res = await fetch(`${baseUrl}/v1/post/${postID}`)
+    const response = await res.json()
+
+    return response.data.post
+}
+
 
 
 
@@ -94,5 +102,6 @@ export {
     getPosts,
     getCategories,
     getAndShowHeaderCityLocations,
-    
+    getPostDetails,
+
 }
