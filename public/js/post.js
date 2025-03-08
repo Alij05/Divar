@@ -14,6 +14,7 @@ window.addEventListener('load', () => {
         const postDescription = document.querySelector('#post-description')
         const postLocation = document.querySelector('#post-location')
         const postBreadcrumb = document.querySelector('#breadcrumb')
+        const shareIcon = document.querySelector('#share-icon')
 
 
         postTitle.innerHTML = post.title
@@ -39,5 +40,10 @@ window.addEventListener('load', () => {
     })
 
 
+    //! Events
+
+    shareIcon.addEventListener('click', async () => {
+      await navigator.share(location.href)
+    })
 
 })
