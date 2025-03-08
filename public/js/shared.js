@@ -1,4 +1,4 @@
-import { getAllLocations, getAndShowHeaderCityLocations, showSocialMedias } from "../../utils/shared.js";
+import { getAllLocations, getAndShowHeaderCityLocations, getCategories, showSocialMedias } from "../../utils/shared.js";
 import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, saveInLocalStorage, showModal } from "../../utils/utils.js";
 
 
@@ -25,10 +25,13 @@ window.addEventListener('load', () => {
     const categoryModalOverlay = document.querySelector('.category_modal_overlay')
     const headerCategoryMenu = document.querySelector('#header__category-menu')
     const allModalCategoriesPosts = document.querySelector('#all-categories-posts')
+    const categoriesList = document.querySelector('#categories-list')
+    const categoryResults = document.querySelector('#category-results')
 
 
     let selectedCities = []
     let allCities = []
+    let allCategories = []
 
     const searchValue = getParamFromURL('search')
     if (searchValue) {
@@ -55,6 +58,12 @@ window.addEventListener('load', () => {
     getAllLocations().then(data => {
         allCities = data
         showProvinces(allCities)
+    })
+
+
+    getCategories().then(response => {
+        allCategories = response.data.categories
+        showCategories(allCategories)
     })
 
 
@@ -272,6 +281,48 @@ window.addEventListener('load', () => {
     }
 
 
+    const showCategories = (allCategories) => {
+        allCategories.forEach(category => {
+            categoriesList.insertAdjacentHTML('beforeend', `
+                <li class="header__category-menu-item" onmouseenter="showActiveCategorySubs('${category._id}')">
+                    <div class="header__category-menu-link">
+                      <div class="header__category-menu-link-right">
+                        <i class="header__category-menu-icon bi bi-house"></i>
+                        ${category.title}
+                      </div>
+                      <div class="header__category-menu-link-left">
+                        <i class="header__category-menu-arrow-icon bi bi-chevron-left"></i>
+                      </div>
+                    </div>
+                </li>
+                `)
+        })
+
+    }
+
+
+    const showActiveCategorySubs = (categoryID) => {
+        const category = allCategories.find(category => category._id === categoryID)
+
+        categoryResults.innerHTML = ''
+        category.subCategories.forEach(subCategory => {
+            categoryResults.insertAdjacentHTML('beforeend', `
+                <div>
+                    <ul class="header__category-dropdown-list">
+                        <div class="header__category-dropdown-title">${subCategory.title}</div>
+                        ${subCategory.subCategories.map(subSubCategory => `
+                            <li class="header__category-dropdown-item">
+                                <div class="header__category-dropdown-link">${subSubCategory.title}</div>
+                            </li>
+                            `).join("")}
+                    </ul>
+                </div>
+                `)
+        })
+
+    }
+
+
 
     //! Events
 
@@ -385,7 +436,7 @@ window.addEventListener('load', () => {
 
 
     //* Categories Modal
-    
+
     headerCategoryBtn?.addEventListener('click', () => {
         showModal('header__category-menu', 'header__category-menu--active')
     })
@@ -403,5 +454,6 @@ window.addEventListener('load', () => {
     // Bind
     window.removeCityFromModal = removeCityFromModal
     window.cityItemClickHandler = cityItemClickHandler
+    window.showActiveCategorySubs = showActiveCategorySubs
 
 })
