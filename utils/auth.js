@@ -1,5 +1,5 @@
 import { baseUrl } from "./shared.js";
-import { hideModal, showSwal } from "./utils.js";
+import { hideModal, saveInLocalStorage, showSwal } from "./utils.js";
 
 
 const loading = document.querySelector('#loading-container')
@@ -97,6 +97,9 @@ const verifyOTP = async () => {
     })
 
     if (res.status === 200 || res.status === 201) {
+        const response = await res.json()
+        saveInLocalStorage('token', response.data.token)
+
         loading.classList.remove('active-login-loader')
         hideModal("login-modal", "login-modal--active");
         showSwal(
