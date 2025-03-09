@@ -1,4 +1,4 @@
-import { submitPhoneNumber } from "../../utils/auth.js";
+import { submitPhoneNumber, verifyOTP } from "../../utils/auth.js";
 import { getAllLocations, getAndShowHeaderCityLocations, getCategories, showSocialMedias } from "../../utils/shared.js";
 import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, saveInLocalStorage, showModal } from "../../utils/utils.js";
 
@@ -32,8 +32,7 @@ window.addEventListener('load', () => {
     const loginModalOverlay = document.querySelector(".login_modal_overlay");
     const loginModalHeaderBtn = document.querySelector(".login-modal__header-btn");
     const submitPhoneNumberBtn = document.querySelector(".submit_phone_number_btn");
-    const phoneNumberInput = document.querySelector(".phone_Number_input");
-
+    const loginBtn = document.querySelector(".login_btn");
 
     let selectedCities = []
     let allCities = []
@@ -476,6 +475,11 @@ window.addEventListener('load', () => {
     submitPhoneNumberBtn.addEventListener('click', (event) => {
         event.preventDefault()
         submitPhoneNumber()
+    })
+
+    loginBtn?.addEventListener('click', (event) => {
+        event.preventDefault()
+        verifyOTP()
     })
 
 

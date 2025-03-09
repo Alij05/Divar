@@ -1,16 +1,23 @@
 import { baseUrl } from "./shared.js";
+import { hideModal, showSwal } from "./utils.js";
 
 
+const loading = document.querySelector('#loading-container')
 const loginModal = document.querySelector('#login-modal')
-const loginFormError = document.querySelector('.step-1-login-form__error')
+const step1LoginFormError = document.querySelector('.step-1-login-form__error')
+const step2LoginFormError = document.querySelector('.step-2-login-form__error')
 const phoneNumberInput = document.querySelector(".phone_Number_input");
 const userNumberNotice = document.querySelector(".user_number_notice");
 const requestTimerContainer = document.querySelector(".request_timer");
 const requestTimer = document.querySelector(".request_timer span");
 const reqNewCodeBtn = document.querySelector(".req_new_code_btn");
+const otpInput = document.querySelector(".code_input");
 
 
 const submitPhoneNumber = async () => {
+    // Show Website Loading
+    loading.classList.add('active-login-loader')
+
     const phoneRegex = RegExp(/^(09)[0-9]{9}$/);
     const phoneNumber = phoneNumberInput.value
     const isValidPhoneNumber = phoneRegex.test(phoneNumber)
@@ -18,7 +25,7 @@ const submitPhoneNumber = async () => {
 
     if (phoneNumber.length === 11) {
         if (isValidPhoneNumber) {
-            loginFormError.innerHTML = ''
+            step1LoginFormError.innerHTML = ''
             // Send OTP Request to Backend
             const res = await fetch(`${baseUrl}/v1/auth/send`, {
                 method: 'POST',
@@ -29,6 +36,7 @@ const submitPhoneNumber = async () => {
             })
 
             if (res.status === 200) {
+                loading.classList.remove('active-login-loader')
                 loginModal.classList.add('active_step_2')
                 userNumberNotice.innerHTML = phoneNumber
                 reqNewCodeBtn.style.display = 'none'
@@ -51,18 +59,65 @@ const submitPhoneNumber = async () => {
             }
 
         } else {
-            loginFormError.innerHTML = 'شماره تماس وارد شده معتبر نیست'
+            step1LoginFormError.innerHTML = 'شماره تماس وارد شده معتبر نیست'
+            loading.classList.remove('active-login-loader')
         }
 
     } else {
-        loginFormError.innerHTML = 'شماره تماس باید 11 رقم باشد'
+        step1LoginFormError.innerHTML = 'شماره تماس باید 11 رقم باشد'
+        loading.classList.remove('active-login-loader')
+    }
+
+}
+
+
+const verifyOTP = async () => {
+    // Show Website Loading
+    loading.classList.add('active-login-loader')
+
+    const otpRegex = RegExp(/^\d{4}$/)
+    const userOtp = otpInput.value
+    const isValidOTP = otpRegex.test(userOtp)
+
+    if (isValidOTP) {
+        step2LoginFormError.innerHTML = ''
+
+
+    } else {
+        step2LoginFormError.innerHTML = 'کد وارد شده نامعتبر است'
+        loading.classList.remove('active-login-loader')
+    }
+
+    const res = await fetch(`${baseUrl}/v1/auth/verify`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ phone: phoneNumberInput.value, otp: userOtp })
+    })
+
+    if (res.status === 200 || res.status === 201) {
+        loading.classList.remove('active-login-loader')
+        hideModal("login-modal", "login-modal--active");
+        showSwal(
+            "لاگین با موفقیت انجام شد",
+            "success",
+            "ورود به پنل کاربری",
+            () => (location.href = "/pages/userPanel/verify.html")
+        );
+
+    } else if (res.status === 400) {
+        loading.classList.remove("active-login-loader");
+        otpInput.value = "";
+        step2LoginFormError.innerHTML = "کد وارد شده نامعتبر هست";
+
     }
 
 }
 
 
 
-
 export {
     submitPhoneNumber,
+    verifyOTP,
 }
