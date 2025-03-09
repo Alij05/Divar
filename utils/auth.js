@@ -82,39 +82,38 @@ const verifyOTP = async () => {
     if (isValidOTP) {
         step2LoginFormError.innerHTML = ''
 
+        const res = await fetch(`${baseUrl}/v1/auth/verify`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ phone: phoneNumberInput.value, otp: userOtp })
+        })
+
+        if (res.status === 200 || res.status === 201) {
+            const response = await res.json()
+            saveInLocalStorage('token', response.data.token)
+
+            loading.classList.remove('active-login-loader')
+            hideModal("login-modal", "login-modal--active");
+            showSwal(
+                "لاگین با موفقیت انجام شد",
+                "success",
+                "ورود به پنل کاربری",
+                () => (location.href = "/pages/userPanel/verify.html")
+            );
+
+        } else if (res.status === 400) {
+            loading.classList.remove("active-login-loader");
+            otpInput.value = "";
+            step2LoginFormError.innerHTML = "کد وارد شده نامعتبر هست";
+        }
 
     } else {
         step2LoginFormError.innerHTML = 'کد وارد شده نامعتبر است'
         loading.classList.remove('active-login-loader')
     }
 
-    const res = await fetch(`${baseUrl}/v1/auth/verify`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ phone: phoneNumberInput.value, otp: userOtp })
-    })
-
-    if (res.status === 200 || res.status === 201) {
-        const response = await res.json()
-        saveInLocalStorage('token', response.data.token)
-
-        loading.classList.remove('active-login-loader')
-        hideModal("login-modal", "login-modal--active");
-        showSwal(
-            "لاگین با موفقیت انجام شد",
-            "success",
-            "ورود به پنل کاربری",
-            () => (location.href = "/pages/userPanel/verify.html")
-        );
-
-    } else if (res.status === 400) {
-        loading.classList.remove("active-login-loader");
-        otpInput.value = "";
-        step2LoginFormError.innerHTML = "کد وارد شده نامعتبر هست";
-
-    }
 
 }
 
