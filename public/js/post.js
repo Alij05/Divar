@@ -7,9 +7,6 @@ window.addEventListener('load', () => {
   loadingContainer.style.display = 'none'
 
   getPostDetails().then(post => {
-    console.log(post);
-
-
     const postTitle = document.querySelector('#post-title')
     const postDescription = document.querySelector('#post-description')
     const postLocation = document.querySelector('#post-location')
@@ -23,7 +20,6 @@ window.addEventListener('load', () => {
     const noteTrashIcon = document.querySelector("#note-trash-icon");
     const postFeedbackIcons = document.querySelectorAll(".post_feedback_icon");
     const phoneInfoBtn = document.querySelector("#phone-info-btn");
-    const loginModalOverlay = document.querySelector("#login_modal_overlay");
 
     const isUserLogin = isLogin()
 
@@ -111,9 +107,6 @@ window.addEventListener('load', () => {
       })
     }
 
-    loginModalOverlay.addEventListener('click', () => {
-      hideModal('login-modal', 'login-modal--active')
-    })
 
   })
 

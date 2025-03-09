@@ -28,6 +28,10 @@ window.addEventListener('load', () => {
     const categoriesList = document.querySelector('#categories-list')
     const categoryResults = document.querySelector('#category-results')
 
+    const loginModalOverlay = document.querySelector(".login_modal_overlay");
+    const loginModalHeaderBtn = document.querySelector(".login-modal__header-btn");
+    const submitPhoneNumberBtn = document.querySelector(".submit_phone_number_btn");
+
 
     let selectedCities = []
     let allCities = []
@@ -455,6 +459,16 @@ window.addEventListener('load', () => {
 
     allModalCategoriesPosts?.addEventListener('click', () => {
         removeParamFromURL('categoryID')
+    })
+
+
+    //* Login Modal
+    loginModalOverlay.addEventListener('click', () => {
+        hideModal('login-modal', 'login-modal--active')
+    })
+
+    loginModalHeaderBtn.addEventListener('click', () => {
+        hideModal('login-modal', 'login-modal--active')
     })
 
 
