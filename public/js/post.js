@@ -1,14 +1,16 @@
-import { getPostDetails } from "../../utils/shared.js"
-import { calculateRelativeTimeDifference, hideModal, isLogin, showModal, showSwal } from "../../utils/utils.js"
+import { baseUrl, getPostDetails } from "../../utils/shared.js"
+import { calculateRelativeTimeDifference, getParamFromURL, getToken, hideModal, isLogin, showModal, showSwal } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
-  
+
   getPostDetails().then(async (post) => {
     // Website Loader
     const loading = document.querySelector('#loading-container')
     loading.style.display = 'none'
 
     const isUserLogin = await isLogin()
+    const token = getToken()
+    let noteID = null
 
     const postTitle = document.querySelector('#post-title')
     const postDescription = document.querySelector('#post-description')
@@ -23,6 +25,7 @@ window.addEventListener('load', () => {
     const noteTrashIcon = document.querySelector("#note-trash-icon");
     const postFeedbackIcons = document.querySelectorAll(".post_feedback_icon");
     const phoneInfoBtn = document.querySelector("#phone-info-btn");
+    // const postNoteInput = document.querySelector(".post-preview__input");
 
 
     postTitle.innerHTML = post.title
@@ -88,6 +91,13 @@ window.addEventListener('load', () => {
     })
 
     if (isUserLogin) {
+      // if there was a Note, Show Note in TextArea
+      if (post.note) {
+        noteID = post.note._id
+        noteTextarea.value = post.note.content
+        noteTrashIcon.style.display = 'block'
+      }
+
       noteTextarea.addEventListener('keyup', event => {
         if (event.target.value.trim()) {
           noteTrashIcon.style.display = 'block'
@@ -101,12 +111,42 @@ window.addEventListener('load', () => {
         })
 
       })
+
+      // Save the User Note of Post
+      noteTextarea.addEventListener('blur', async (event) => {
+        // Edit an Existed Note
+        if (noteID) {
+          await fetch(`${baseUrl}/v1/note/${noteID}`, {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: event.target.value })
+          })
+
+          // Create a New Note for First Time
+        } else {
+          await fetch(`${baseUrl}/v1/note`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ postId: post._id, content: event.target.value })
+          })
+
+        }
+
+      })
+
     } else {
       noteTextarea.addEventListener('focus', (event) => {
         event.preventDefault()
         showModal('login-modal', 'login-modal--active')
       })
     }
+
 
 
   })

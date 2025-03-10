@@ -1,4 +1,4 @@
-import { getFromLocalStorage, getParamFromURL, saveInLocalStorage } from "./utils.js"
+import { getFromLocalStorage, getParamFromURL, getToken, saveInLocalStorage } from "./utils.js"
 
 const baseUrl = "https://divarapi.liara.run"
 
@@ -85,7 +85,14 @@ const getAndShowHeaderCityLocations = () => {
 
 const getPostDetails = async () => {
     const postID = getParamFromURL('id')
-    const res = await fetch(`${baseUrl}/v1/post/${postID}`)
+    const token = getToken()
+
+    const res = await fetch(`${baseUrl}/v1/post/${postID}`, {
+        headers: {
+            Authorization: token ? `Bearer ${token}` : null
+        }
+    })
+    
     const response = await res.json()
 
     return response.data.post

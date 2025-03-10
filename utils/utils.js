@@ -110,5 +110,6 @@ export {
     showModal,
     hideModal,
     showSwal,
+    getToken,
     isLogin,
 }
