@@ -87,12 +87,15 @@ const getPostDetails = async () => {
     const postID = getParamFromURL('id')
     const token = getToken()
 
+    // Fix the Backend Bug
+    let headers = {}
+    if (token) {
+        headers.Authorization = `Bearer ${token}`
+    }
     const res = await fetch(`${baseUrl}/v1/post/${postID}`, {
-        headers: {
-            Authorization: token ? `Bearer ${token}` : null
-        }
+        headers
     })
-    
+
     const response = await res.json()
 
     return response.data.post

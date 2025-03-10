@@ -10,7 +10,9 @@ window.addEventListener('load', () => {
 
     const isUserLogin = await isLogin()
     const token = getToken()
+
     let noteID = null
+    let bookmarkStatus = false
 
     const postTitle = document.querySelector('#post-title')
     const postDescription = document.querySelector('#post-description')
@@ -25,7 +27,8 @@ window.addEventListener('load', () => {
     const noteTrashIcon = document.querySelector("#note-trash-icon");
     const postFeedbackIcons = document.querySelectorAll(".post_feedback_icon");
     const phoneInfoBtn = document.querySelector("#phone-info-btn");
-    // const postNoteInput = document.querySelector(".post-preview__input");
+    const bookmarkIconBtn = document.querySelector("#bookmark-icon-btn");
+    const bookmarkIcon = bookmarkIconBtn.querySelector(".bi");
 
 
     postTitle.innerHTML = post.title
@@ -60,7 +63,7 @@ window.addEventListener('load', () => {
       postInfosList.insertAdjacentHTML('beforeend', `
             <li class="post__info-item">
               <span class="post__info-key">${field.name}</span>
-              <span class="post__info-value">${field.data}</span>
+              <span class="post__info-value">${typeof field.data === 'boolean' ? (field.data ? 'دارد' : 'ندارد') : field.data}</span>
             </li>
             `)
     })
@@ -91,6 +94,8 @@ window.addEventListener('load', () => {
     })
 
     if (isUserLogin) {
+      //* Note 
+
       // if there was a Note, Show Note in TextArea
       if (post.note) {
         noteID = post.note._id
@@ -140,11 +145,63 @@ window.addEventListener('load', () => {
 
       })
 
+
+
+      // * Bookmark
+      if (post.bookmarked) {
+        bookmarkStatus = true
+        bookmarkIcon.style.color = 'red'
+      } else {
+        bookmarkStatus = false
+      }
+
+      bookmarkIconBtn.addEventListener('click', async () => {
+        const postID = getParamFromURL('id')
+
+        // if Exist Post in Bookmark,  Delete Post
+        if (bookmarkStatus) {
+          const res = await fetch(`${baseUrl}/v1/bookmark/${postID}`, {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
+          })
+
+          if (res.status === 200) {
+            bookmarkStatus = false
+            bookmarkIcon.style.color = 'gray'
+          }
+
+        } else {
+          const res = await fetch(`${baseUrl}/v1/bookmark/${postID}`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
+          })
+
+          if (res.status === 201) {
+            bookmarkStatus = true
+            bookmarkIcon.style.color = 'red'
+
+          }
+        }
+
+
+      })
+
+
     } else {
       noteTextarea.addEventListener('focus', (event) => {
         event.preventDefault()
         showModal('login-modal', 'login-modal--active')
       })
+
+      bookmarkIconBtn.addEventListener('focus', (event) => {
+        event.preventDefault()
+        showModal('login-modal', 'login-modal--active')
+      })
+
     }
 
 
