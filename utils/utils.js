@@ -1,3 +1,6 @@
+import { baseUrl } from "./shared.js"
+
+
 const saveInLocalStorage = (key, value) => {
     localStorage.setItem(key, JSON.stringify(value))
 }
@@ -80,9 +83,21 @@ const showSwal = (title, icon, buttons, callback) => {
     })
 }
 
-const isLogin = () => {
-    return false
+const getToken = () => {
+    const token = getFromLocalStorage('token')
+    return token
 }
+
+const isLogin = async () => {
+    const res = await fetch(`${baseUrl}/v1/auth/me`, {
+        headers: {
+            Authorization: `Bearer ${getToken()}`
+        }
+    })
+
+    return res.status === 200 ? true : false
+}
+
 
 
 export {

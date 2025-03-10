@@ -2,11 +2,14 @@ import { getPostDetails } from "../../utils/shared.js"
 import { calculateRelativeTimeDifference, hideModal, isLogin, showModal, showSwal } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
-  const loadingContainer = document.querySelector('#loading-container')
-  // Website Loader
-  loadingContainer.style.display = 'none'
+  
+  getPostDetails().then(async (post) => {
+    // Website Loader
+    const loading = document.querySelector('#loading-container')
+    loading.style.display = 'none'
 
-  getPostDetails().then(post => {
+    const isUserLogin = await isLogin()
+
     const postTitle = document.querySelector('#post-title')
     const postDescription = document.querySelector('#post-description')
     const postLocation = document.querySelector('#post-location')
@@ -20,8 +23,6 @@ window.addEventListener('load', () => {
     const noteTrashIcon = document.querySelector("#note-trash-icon");
     const postFeedbackIcons = document.querySelectorAll(".post_feedback_icon");
     const phoneInfoBtn = document.querySelector("#phone-info-btn");
-
-    const isUserLogin = isLogin()
 
 
     postTitle.innerHTML = post.title
