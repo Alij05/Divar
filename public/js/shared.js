@@ -80,11 +80,11 @@ window.addEventListener('load', () => {
 
     const showProvinces = (cities) => {
         const citiesModalCities = document.querySelector('.city-modal__cities')
-        citiesModalCities.scrollTo(0, 0)
-        citiesModalList.innerHTML = ''
+        citiesModalCities?.scrollTo(0, 0)
+        citiesModalList ? citiesModalList.innerHTML = '' : null
 
         cities.provinces.forEach(province => {
-            citiesModalList.insertAdjacentHTML('beforeend', `
+            citiesModalList?.insertAdjacentHTML('beforeend', `
                 <li 
                     class="city-modal__cities-item province-item" 
                     data-province-id="${province.id}"
@@ -294,7 +294,7 @@ window.addEventListener('load', () => {
 
     const showCategories = (allCategories) => {
         allCategories.forEach(category => {
-            categoriesList.insertAdjacentHTML('beforeend', `
+            categoriesList?.insertAdjacentHTML('beforeend', `
                 <li class="header__category-menu-item" onmouseenter="showActiveCategorySubs('${category._id}')">
                     <div class="header__category-menu-link">
                       <div class="header__category-menu-link-right">
@@ -315,9 +315,9 @@ window.addEventListener('load', () => {
     const showActiveCategorySubs = (categoryID) => {
         const category = allCategories.find(category => category._id === categoryID)
 
-        categoryResults.innerHTML = ''
+        categoryResults ? categoryResults.innerHTML = '' : null
         category.subCategories.forEach(subCategory => {
-            categoryResults.insertAdjacentHTML('beforeend', `
+            categoryResults?.insertAdjacentHTML('beforeend', `
                 <div>
                     <ul class="header__category-dropdown-list">
                         <div class="header__category-dropdown-title" onclick="categoryClickHandler('${subCategory._id}')">${subCategory.title}</div>
@@ -358,7 +358,7 @@ window.addEventListener('load', () => {
 
     // Handle User Category Search
     const mostSearchKeyWords = ["ماشین", "ساعت", "موبایل", "لپ تاپ", "تلویزیون"];
-    globalSearchInput.addEventListener('focus', () => {
+    globalSearchInput?.addEventListener('focus', () => {
         showModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
 
         mostSearchKeyWords.forEach(keyWord => {
@@ -374,13 +374,13 @@ window.addEventListener('load', () => {
         })
     })
 
-    searchbarModalOverlay.addEventListener('click', () => {
+    searchbarModalOverlay?.addEventListener('click', () => {
         hideModal('header__searchbar-dropdown', 'header__searchbar-dropdown--active')
         mostSearchedList.innerHTML = ''
     })
 
     // Handle City Modal 
-    headerCityContainer.addEventListener('click', (event) => {
+    headerCityContainer?.addEventListener('click', (event) => {
         showModal('city-modal', 'city-modal--active')
 
         const cities = getFromLocalStorage('cities')
@@ -391,7 +391,7 @@ window.addEventListener('load', () => {
 
     })
 
-    cityModalOverlay.addEventListener('click', () => {
+    cityModalOverlay?.addEventListener('click', () => {
         hideModal('city-modal', 'city-modal--active')
         showProvinces(allCities)
         cityModalAcceptBtn.classList.replace('city-modal__accept--active', "city-modal__accept")
@@ -413,7 +413,7 @@ window.addEventListener('load', () => {
         cityModalAcceptBtn.classList.replace('city-modal__accept--active', "city-modal__accept")
     })
 
-    deleteAllSelectedCitiesBtn.addEventListener('click', () => {
+    deleteAllSelectedCitiesBtn?.addEventListener('click', () => {
         selectedCities = []
         showProvinces(allCities)
         addCityToModal(selectedCities)
@@ -421,7 +421,7 @@ window.addEventListener('load', () => {
         cityModalError.style.display = 'block'
     })
 
-    cityModalSearchInput.addEventListener('keyup', (event) => {
+    cityModalSearchInput?.addEventListener('keyup', (event) => {
         const searchedCities = allCities.cities.filter(city => city.name.startsWith(event.target.value))
         console.log(searchedCities);
 

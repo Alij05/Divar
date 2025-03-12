@@ -67,17 +67,20 @@ const getCategories = async () => {
 const getAndShowHeaderCityLocations = () => {
     const headerCityTitle = document.querySelector('#header-city-title')
 
-    const cities = getFromLocalStorage('cities')
-    // Default City
-    if (!cities.length) {
-        saveInLocalStorage('cities', [{ name: 'تهران', id: 301 }])
-    } else {
-        if (cities.length === 1) {
-            headerCityTitle.innerHTML = cities[0].name;
-
+    if (headerCityTitle) {
+        const cities = getFromLocalStorage('cities')
+        // Default City
+        if (!cities.length) {
+            saveInLocalStorage('cities', [{ name: 'تهران', id: 301 }])
         } else {
-            headerCityTitle.innerHTML = `${cities.length} شهر`;
+            if (cities.length === 1) {
+                headerCityTitle.innerHTML = cities[0].name;
+
+            } else {
+                headerCityTitle.innerHTML = `${cities.length} شهر`;
+            }
         }
+
     }
 
 }
