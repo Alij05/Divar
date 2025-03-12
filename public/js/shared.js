@@ -1,10 +1,11 @@
 import { requestNewOTP, submitPhoneNumber, verifyOTP } from "../../utils/auth.js";
-import { getAllLocations, getAndShowHeaderCityLocations, getCategories, showSocialMedias } from "../../utils/shared.js";
+import { getAllLocations, getAndShowHeaderCityLocations, getCategories, showSocialMedias, showUserPanelLinks } from "../../utils/shared.js";
 import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, saveInLocalStorage, showModal } from "../../utils/utils.js";
 
 
 window.addEventListener('load', () => {
     showSocialMedias()
+    showUserPanelLinks()
     getAndShowHeaderCityLocations()
 
 
