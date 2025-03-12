@@ -69,6 +69,47 @@ window.addEventListener('load', () => {
     })
 
 
+    if (post.pics.length) {
+      post.pics.map(pic => {
+        mainSlider.insertAdjacentHTML('beforeend', `
+          <div class="swiper-slide">
+            <img src="${baseUrl}/${pic.path}" />
+          </div>
+          `)
+          
+        secondSlider.insertAdjacentHTML('beforeend', `
+            <div class="swiper-slide">
+              <img src="${baseUrl}/${pic.path}" />
+            </div>
+          `)
+      })
+
+    } else {
+      postPreview.style.display = 'none'
+    }
+
+    const mainSliderConfigs = new Swiper(".mySwiper", {
+      spaceBetween: 10,
+      rewind: true,
+      slidesPerView: 4,
+      freeMode: true,
+      watchSlidesProgress: true,
+    });
+
+    const secondSliderConfigs = new Swiper(".mySwiper", {
+      spaceBetween: 10,
+      rewind: true,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+
+      thumbs: {
+        swiper: mainSliderConfigs,
+      },
+    });
+
+
 
 
     //! Events
