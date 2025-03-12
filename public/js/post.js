@@ -231,7 +231,7 @@ window.addEventListener('load', () => {
       watchSlidesProgress: true,
     });
 
-    const secondSliderConfigs = new Swiper(".mySwiper", {
+    const secondSliderConfigs = new Swiper(".mySwiper2", {
       spaceBetween: 10,
       rewind: true,
       navigation: {

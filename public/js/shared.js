@@ -1,4 +1,4 @@
-import { submitPhoneNumber, verifyOTP } from "../../utils/auth.js";
+import { requestNewOTP, submitPhoneNumber, verifyOTP } from "../../utils/auth.js";
 import { getAllLocations, getAndShowHeaderCityLocations, getCategories, showSocialMedias } from "../../utils/shared.js";
 import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, saveInLocalStorage, showModal } from "../../utils/utils.js";
 
@@ -33,6 +33,8 @@ window.addEventListener('load', () => {
     const loginModalHeaderBtn = document.querySelector(".login-modal__header-btn");
     const submitPhoneNumberBtn = document.querySelector(".submit_phone_number_btn");
     const loginBtn = document.querySelector(".login_btn");
+    const reqNewCodeBtn = document.querySelector(".req_new_code_btn");
+
 
     let selectedCities = []
     let allCities = []
@@ -337,9 +339,9 @@ window.addEventListener('load', () => {
 
 
 
-    //! Events
+    // Events // 
 
-    //* Cities Modal
+    //! Cities Modal
 
     removeSearchValueIcon?.addEventListener('click', () => {
         removeParamFromURL('search')
@@ -448,7 +450,7 @@ window.addEventListener('load', () => {
     })
 
 
-    //* Categories Modal
+    //! Categories Modal
 
     headerCategoryBtn?.addEventListener('click', () => {
         showModal('header__category-menu', 'header__category-menu--active')
@@ -463,7 +465,8 @@ window.addEventListener('load', () => {
     })
 
 
-    //* Login Modal
+    //! Login Modal
+
     loginModalOverlay.addEventListener('click', () => {
         hideModal('login-modal', 'login-modal--active')
     })
@@ -477,9 +480,14 @@ window.addEventListener('load', () => {
         submitPhoneNumber()
     })
 
-    loginBtn?.addEventListener('click', (event) => {
+    loginBtn.addEventListener('click', (event) => {
         event.preventDefault()
         verifyOTP()
+    })
+
+    reqNewCodeBtn.addEventListener('click', (event) => {
+        event.preventDefault()
+        requestNewOTP()
     })
 
 
