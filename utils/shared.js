@@ -236,6 +236,14 @@ const getAllArticles = async () => {
 }
 
 
+const searchKeyonAllArticles = async (key) => {
+  const res = await fetch(`${baseUrl}/v1/support/articles/search?s=${key}`)
+  const response = await res.json()
+
+  return response.data.articles
+}
+
+
 
 export {
   baseUrl,
@@ -251,6 +259,7 @@ export {
   getArticleDetails,
   getAllArticlesOfCategory,
   getArticles,
-  getAllArticles
+  getAllArticles,
+  searchKeyonAllArticles,
 
 }
