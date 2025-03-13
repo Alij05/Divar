@@ -27,15 +27,19 @@ window.addEventListener('load', () => {
         // Search in All Articles
         searchInput.addEventListener('keyup', (event) => {
             if (event.target.value.trim()) {
+                // Redirect When Click Enter on Keyboard
+                if (event.keyCode === 13) {
+                    location.href = `/pages/support/search.html?key=${event.target.value.trim()}`
+                }
+
                 searchResult.classList.add('active')
                 removeIcon.classList.add('active')
 
                 let searchedArticles = articles.filter(article => article.title.includes(event.target.value))
-                console.log(searchedArticles);
 
                 if (searchedArticles.length) {
                     searchResult.innerHTML = `
-                        <a href="Test">
+                        <a href="/pages/support/search.html?key=${event.target.value.trim()}">
                           <i class="bi bi-search"></i>
                           ${event.target.value.trim()}
                         </a>
@@ -51,7 +55,7 @@ window.addEventListener('load', () => {
 
                 } else {
                     searchResult.innerHTML = `
-                        <a href="/pages/support/search.html">
+                        <a href="/pages/support/search.html?key=${event.target.value.trim()}">
                           <i class="bi bi-search"></i>
                           ${event.target.value.trim()}
                         </a>
