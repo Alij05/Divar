@@ -228,6 +228,15 @@ const getArticles = async () => {
 }
 
 
+const getAllArticles = async () => {
+  const res = await fetch(`${baseUrl}/v1/support/articles`)
+  const response = await res.json()
+
+  return response.data.articles
+}
+
+
+
 export {
   baseUrl,
   getAllCities,
@@ -242,5 +251,6 @@ export {
   getArticleDetails,
   getAllArticlesOfCategory,
   getArticles,
+  getAllArticles
 
 }

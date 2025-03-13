@@ -1,4 +1,4 @@
-import { baseUrl, getSupportCategoriesArticles } from "../../utils/shared.js"
+import { baseUrl, getAllArticles, getSupportCategoriesArticles } from "../../utils/shared.js"
 
 
 window.addEventListener('load', () => {
@@ -9,6 +9,9 @@ window.addEventListener('load', () => {
 
     const popularArticlesContainer = document.querySelector('#popular-articles')
     const categoriesContainerElement = document.querySelector('#categories-container')
+    const searchInput = document.querySelector('#search-input')
+    const removeIcon = document.querySelector('#remove-icon')
+    const searchResult = document.querySelector('#search-result')
 
 
     getSupportCategoriesArticles().then(supportArticlesCategories => {
@@ -18,6 +21,58 @@ window.addEventListener('load', () => {
         showAllArticlesCategories(supportArticlesCategories)
 
     })
+
+
+    getAllArticles().then(articles => {
+        // Search in All Articles
+        searchInput.addEventListener('keyup', (event) => {
+            if (event.target.value.trim()) {
+                searchResult.classList.add('active')
+                removeIcon.classList.add('active')
+
+                let searchedArticles = articles.filter(article => article.title.includes(event.target.value))
+                console.log(searchedArticles);
+
+                if (searchedArticles.length) {
+                    searchResult.innerHTML = `
+                        <a href="Test">
+                          <i class="bi bi-search"></i>
+                          ${event.target.value.trim()}
+                        </a>
+                    `
+                    searchedArticles.forEach(article => {
+                        searchResult.insertAdjacentHTML('beforeend', `
+                                <a href="/pages/support/article.html?id=${article._id}">
+                                  <i class="bi bi-card-text"></i>
+                                  ${article.title}
+                                </a>
+                                `)
+                    })
+
+                } else {
+                    searchResult.innerHTML = `
+                        <a href="/pages/support/search.html">
+                          <i class="bi bi-search"></i>
+                          ${event.target.value.trim()}
+                        </a>
+                    `
+                }
+
+            } else {
+                searchResult.classList.remove('active')
+                removeIcon.classList.remove('active')
+            }
+
+        })
+
+        removeIcon.addEventListener('click', () => {
+            searchInput.value = ''
+            searchResult.classList.remove('active')
+            removeIcon.classList.remove('active')
+        })
+
+    })
+
 
 
 
