@@ -468,25 +468,25 @@ window.addEventListener('load', () => {
 
     //! Login Modal
 
-    loginModalOverlay.addEventListener('click', () => {
+    loginModalOverlay?.addEventListener('click', () => {
         hideModal('login-modal', 'login-modal--active')
     })
 
-    loginModalHeaderBtn.addEventListener('click', () => {
+    loginModalHeaderBtn?.addEventListener('click', () => {
         hideModal('login-modal', 'login-modal--active')
     })
 
-    submitPhoneNumberBtn.addEventListener('click', (event) => {
+    submitPhoneNumberBtn?.addEventListener('click', (event) => {
         event.preventDefault()
         submitPhoneNumber()
     })
 
-    loginBtn.addEventListener('click', (event) => {
+    loginBtn?.addEventListener('click', (event) => {
         event.preventDefault()
         verifyOTP()
     })
 
-    reqNewCodeBtn.addEventListener('click', (event) => {
+    reqNewCodeBtn?.addEventListener('click', (event) => {
         event.preventDefault()
         requestNewOTP()
     })

@@ -26,7 +26,7 @@ const showSocialMedias = async () => {
     const socialMedias = await res.json()
 
     socialMedias.data.socials.forEach(social => {
-        footerSocialMedia.insertAdjacentHTML('beforeend', `
+        footerSocialMedia?.insertAdjacentHTML('beforeend', `
             <a href="${social.link}" class="sidebar__icon-link">
                 <img src="${baseUrl}/${social.icon.path}" alt="${social.name}" width="18px" height="18px" class="sidebar__icon bi bi-twitter">
             </a>
@@ -200,6 +200,16 @@ const getSupportCategoriesArticles = async () => {
 }
 
 
+const getArticleDetails = async () => {
+  const articleID = getParamFromURL('id')
+
+  const res = await fetch(`${baseUrl}/v1/support/articles/${articleID}`)
+  const response = await res.json()
+
+  return response.data.article
+
+}
+
 
 export {
     baseUrl,
@@ -212,5 +222,6 @@ export {
     getPostDetails,
     showUserPanelLinks,
     getSupportCategoriesArticles,
+    getArticleDetails,
 
 }
