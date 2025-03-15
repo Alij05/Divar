@@ -1,13 +1,14 @@
 import { requestNewOTP, submitPhoneNumber, verifyOTP } from "../../utils/auth.js";
 import { getAllLocations, getAndShowHeaderCityLocations, getCategories, showSocialMedias, showUserPanelLinks } from "../../utils/shared.js";
-import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, removeParamFromURL, saveInLocalStorage, showModal } from "../../utils/utils.js";
+import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, isLogin, removeParamFromURL, saveInLocalStorage, showModal } from "../../utils/utils.js";
 
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
     showSocialMedias()
     showUserPanelLinks()
     getAndShowHeaderCityLocations()
 
+    const isUserLogin = await isLogin()
 
     const citiesModalList = document.querySelector('#city_modal_list')
     const modalSelectedCitiesCotainer = document.querySelector('#city-selected')
@@ -35,6 +36,10 @@ window.addEventListener('load', () => {
     const submitPhoneNumberBtn = document.querySelector(".submit_phone_number_btn");
     const loginBtn = document.querySelector(".login_btn");
     const reqNewCodeBtn = document.querySelector(".req_new_code_btn");
+    
+    const createPostBtn = document.querySelector(".create_post_btn");
+
+    
 
 
     let selectedCities = []
@@ -489,6 +494,15 @@ window.addEventListener('load', () => {
     reqNewCodeBtn?.addEventListener('click', (event) => {
         event.preventDefault()
         requestNewOTP()
+    })
+
+    createPostBtn?.addEventListener('click', () => {
+        if (isUserLogin) {
+            location.href = '/pages/new.html'
+        } else {
+            showModal('login-modal', 'login-modal--active')
+            hideModal('header__category-menu', 'header__category-menu--active')
+        }
     })
 
 
