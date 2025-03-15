@@ -6,6 +6,9 @@ window.addEventListener('load', async () => {
     const categoriesContainer = document.querySelector('#categories-container')
     const categoriesSection = document.querySelector('#categories')
     const descriptionCheckbox = document.querySelector('#description-checkbox')
+    const searchInput = document.querySelector('#search-input')
+    const resultContainerModal = document.querySelector('#result-container')
+    const removeIcon = document.querySelector('#remove-icon')
 
 
     const isUserLogin = await isLogin()
@@ -72,6 +75,56 @@ window.addEventListener('load', async () => {
     window.backToAllCategories = () => {
         generateCategoriesTemplate(categories)
     }
+
+
+
+
+    //! Events
+    const subCategoriesResult = await fetch(`${baseUrl}/v1/category/sub`)
+    const subCategoriesResponse = await subCategoriesResult.json()
+    const subCategories = subCategoriesResponse.data.categories
+
+    searchInput.addEventListener('keyup', async (event) => {
+        if (event.target.value.trim()) {
+            resultContainerModal.innerHTML = ''
+            resultContainerModal.classList.add('active')
+
+            const searchedCategories = subCategories.filter(subCategory => subCategory.title.includes(event.target.value.trim()))
+
+            if (searchedCategories.length) {
+                searchedCategories.forEach(category => {
+                    resultContainerModal.insertAdjacentHTML('beforeend', `
+                         <a href="/pages/new/registerPost.html?subCategoryID=${category._id}" class="search-result">
+                          <p>${category.title}</p>
+                          <i class="bi bi-chevron-left"></i>
+                        </a>      
+                    `)
+                })
+
+            } else {
+                resultContainerModal.insertAdjacentHTML('beforeend', `
+                    <div class="empty">
+                      <img src="https://support-faq.divarcdn.com/web/2024/03/static/media/magnifier.7f88b2e3f8ae30f4333986d0b0fbcf1d.svg" />
+                      <p>نتیجه‌ای برای جستجوی شما یافت نشد</p>
+                    </div>
+                    `)
+            }
+
+        } else {
+            searchInput.value = ''
+            resultContainerModal.innerHTML = ''
+            resultContainerModal.classList.remove('active')
+            removeIcon.classList.remove('active')
+        }
+
+    })
+
+    removeIcon.addEventListener('click', () => {
+        searchInput.value = ''
+        resultContainerModal.innerHTML = ''
+        resultContainerModal.classList.remove('active')
+        removeIcon.classList.remove('active')
+    })
 
 
     // ===========================================================================================================================
