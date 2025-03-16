@@ -243,11 +243,20 @@ const searchKeyonAllArticles = async (key) => {
   return response.data.articles
 }
 
+
 const getAllCategories = async () => {
   const res = await fetch(`${baseUrl}/v1/category`)
   const response = await res.json()
 
   return response.data.categories
+}
+
+
+const getSubSubCategoryByID = async (categoryID) => {
+  const res = await fetch(`${baseUrl}/v1/category/sub/${categoryID}`)
+  const response = await res.json()
+
+  return response.data.category
 }
 
 
@@ -269,4 +278,5 @@ export {
   getAllArticles,
   searchKeyonAllArticles,
   getAllCategories,
+  getSubSubCategoryByID,
 }
