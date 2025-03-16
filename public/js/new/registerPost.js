@@ -9,6 +9,10 @@ window.addEventListener('load', () => {
     const dynamicFiltersContainer = document.querySelector('#dynamic-fields')
     const citySelectBox = document.querySelector('#city-select')
     const neighborhoodSelectBox = document.querySelector('#neighborhood-select')
+    const postTitleInput = document.querySelector('#post-title-input')
+    const postDescriptionTextarea = document.querySelector('#post-description-textarea')
+    const postPriceInput = document.querySelector('#post-price-input')
+    const exchangeCheckbox = document.querySelector('#exchange-checkbox')
     const inputUploader = document.querySelector('#uploader')
     const imagesContainer = document.querySelector('#images-container')
     const mapIconControll = document.querySelector('.icon-controll')
@@ -262,24 +266,70 @@ window.addEventListener('load', () => {
 
 
     registerBtn.addEventListener('click', async () => {
-        // Check 2 Validation ==> 1) Static Fields Validation   2) Dynamic Fields Validation
+        //* Check 2 Validation ==> 1) Static Fields Validation   2) Dynamic Fields Validation
 
-        const formData = new FormData()
-        // formData.append()
+        // Dynamic Fields Valdation
+        let allFieldsFilled = true
+        for (const slug in categoryFields) {
+            if (!categoryFields[slug]) {
+                allFieldsFilled = false
+            }
+        }
 
-        const res = await fetch(`${baseUrl}/v1/post/${subCategoryID}`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${getToken()}`
-            },
-            body: formData
-        })
+        // Static Fields Valdation
+        if (!allFieldsFilled ||
+            neighborhoodSelectBox.value === "default" ||
+            postTitleInput.value.trim().length === 0 ||
+            postDescriptionTextarea.value.trim().length === 0 ||
+            !postPriceInput.value.trim().length) {
 
-        if (res.status === 200) {
+            showSwal("لطفا همه مشخصات رو مشخص کنید", "error", "تلاش مجدد", () => { });
 
         } else {
+            //  Dynamic Fields & Static Fields Are Filled  //
+
+            const formData = new FormData()
+            formData.append("city", citySelectBox.value.trim())
+            formData.append("neighborhood", neighborhoodSelectBox.value.trim())
+            formData.append("title", postTitleInput.value.trim())
+            formData.append("description", postDescriptionTextarea.value.trim())
+            formData.append("price", postPriceInput.value.trim())
+            formData.append("exchange", exchangeCheckbox.checked)
+            formData.append("map", JSON.stringify(mapView))
+            formData.append("categoryFields", JSON.stringify(categoryFields))
+            pics.map(pic => {
+                formData.append("pics", pic)
+            })
+
+
+            const res = await fetch(`${baseUrl}/v1/post/${subCategoryID}`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                },
+                body: formData
+            })
+
+            if (res.status === 201) {
+                showSwal(
+                    "آگهی مورد نظر با موفقیت در صف انتشار قرار گرفت",
+                    "success",
+                    "پنل کاربری",
+                    () => {
+                        location.href = `/pages/userPanel/posts/preview.html`;
+                    }
+                )
+            } else if (res.status === 400) {
+                showSwal(
+                    "یکی از مشخصات نامعتبر است",
+                    "error",
+                    "تلاش مجدد",
+                    () => { }
+                )
+            }
 
         }
+
 
     })
 
