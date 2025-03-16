@@ -1,5 +1,5 @@
 import { baseUrl, getAllLocations, getSubSubCategoryByID } from "../../../utils/shared.js"
-import { getParamFromURL, getToken } from "../../../utils/utils.js"
+import { getParamFromURL, getToken, showSwal } from "../../../utils/utils.js"
 
 
 
@@ -9,11 +9,14 @@ window.addEventListener('load', () => {
     const dynamicFiltersContainer = document.querySelector('#dynamic-fields')
     const citySelectBox = document.querySelector('#city-select')
     const neighborhoodSelectBox = document.querySelector('#neighborhood-select')
+    const inputUploader = document.querySelector('#uploader')
+    const imagesContainer = document.querySelector('#images-container')
     const registerBtn = document.querySelector('#register-btn')
 
     const subCategoryID = getParamFromURL('subCategoryID')
 
     let categoryFields = {}
+    let pics = []
 
     // Website Loader
     loadingContainer.style.display = 'none'
@@ -143,8 +146,68 @@ window.addEventListener('load', () => {
     })
 
 
+    const generateImages = (pics) => {
+        imagesContainer.innerHTML = ''
+        pics.forEach(pic => {
+            let reader = new FileReader()
+            reader.onloadend = function () {
+                let src = reader.result
+
+                imagesContainer.insertAdjacentHTML('beforeend', `
+                    <div class="image-box">
+                      <div onclick="deleteImage('${pic.name}')">
+                        <i class="bi bi-trash"></i>
+                      </div>
+                      <img src="${src}" alt="post-image" />
+                    </div>  
+                `)
+            }
+
+            reader.readAsDataURL(pic)
+
+        })
+    }
+
+
+    window.deleteImage = (picName) => {
+        pics = pics.filter(pic => pic.name !== picName)
+        generateImages(pics)
+    }
+
+
 
     //! Events
+
+    inputUploader.addEventListener('change', (event) => {
+        if (event.target.files.length) {
+            let file = event.target.files[0]
+
+            // Validation for Type & Size
+            if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
+                if (file.size < 10000000) {
+                    pics.push(file)
+                    generateImages(pics)
+
+                } else {
+                    showSwal(
+                        "سایز فایل آپلودی مجاز نیست ",
+                        "error",
+                        "تلاش مجدد",
+                        () => { }
+                    );
+                }
+
+            } else {
+                showSwal(
+                    "فرمت فایل آپلودی مجاز نیست ",
+                    "error",
+                    "تلاش مجدد",
+                    () => { }
+                );
+            }
+        }
+    })
+
 
     registerBtn.addEventListener('click', async () => {
         // Check 2 Validation ==> 1) Static Fields Validation   2) Dynamic Fields Validation
