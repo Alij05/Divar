@@ -1,12 +1,14 @@
-import { baseUrl, getSubSubCategoryByID } from "../../../utils/shared.js"
+import { baseUrl, getAllLocations, getSubSubCategoryByID } from "../../../utils/shared.js"
 import { getParamFromURL, getToken } from "../../../utils/utils.js"
 
 
 
 window.addEventListener('load', () => {
     const loadingContainer = document.querySelector('#loading-container')
-    const categoryDetailsTitle = document.querySelector('.category_details p')
+    const categoryDetailsTitle = document.querySelector('#subCategory-title')
     const dynamicFiltersContainer = document.querySelector('#dynamic-fields')
+    const citySelectBox = document.querySelector('#city-select')
+    const neighborhoodSelectBox = document.querySelector('#neighborhood-select')
     const registerBtn = document.querySelector('#register-btn')
 
     const subCategoryID = getParamFromURL('subCategoryID')
@@ -29,8 +31,6 @@ window.addEventListener('load', () => {
         })
 
         console.log(subCategory);
-
-
 
         dynamicFiltersContainer.innerHTML = ''
         subCategory.productFields.map(field => {
@@ -76,6 +76,72 @@ window.addEventListener('load', () => {
     window.fieldChangeHandler = (slug, value) => {
         categoryFields[slug] = value
     }
+
+
+    getAllLocations().then(data => {
+        const cityChoices = new Choices(citySelectBox)
+        const neighborhoodChoices = new Choices(neighborhoodSelectBox)
+
+        const tehranNeighborhood = data.neighborhoods.filter(neighborhood => neighborhood.city_id === 301)
+
+        const neighborhoodChoicesConfigs = [
+            {
+                value: 'default',
+                label: 'انتخاب محله',
+                disabled: true,
+                selected: true
+            },
+            ...tehranNeighborhood.map(neighborhood => ({
+                value: neighborhood.id,
+                label: neighborhood.name,
+            }))
+        ]
+
+        neighborhoodChoices.setChoices(neighborhoodChoicesConfigs, 'value', 'label', false)
+
+        cityChoices.setChoices(
+            data.cities.map(city => ({
+                value: city.id,
+                label: city.name,
+                customProperties: { id: city.id },
+                selected: city.name === 'تهران' ? true : false
+            })), 'value', 'label', false)
+
+
+        // Connect City Selectbox to Neighborhood Selectbox to Show neighborhoods Dynamicly
+        citySelectBox.addEventListener('addItem', (event) => {
+            neighborhoodChoices.clearStore()  // Delete all Options of neighborhoodChoices Selectbox
+
+            const neighborhoods = data.neighborhoods.filter(neighborhood => neighborhood.city_id === event.detail.customProperties.id)
+
+            if (neighborhoods.length) {
+                const neighborhoodChoicesConfigs = [{
+                    value: 'default',
+                    label: 'انتخاب محله',
+                    disabled: true,
+                    selected: true
+                },
+                ...neighborhoods.map(neighborhood => ({
+                    value: neighborhood.id,
+                    label: neighborhood.name,
+                }))
+                ]
+
+                neighborhoodChoices.setChoices(neighborhoodChoicesConfigs, 'value', 'label', false)
+
+            } else {
+                neighborhoodChoices.setChoices([{
+                    value: 0,
+                    label: 'محله ای یافت نشد',
+                    disabled: true,
+                    selected: true
+                }], 'value', 'label', false)
+            }
+
+        })
+
+    })
+
 
 
     //! Events
