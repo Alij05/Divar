@@ -3,6 +3,7 @@ import { addParamToURL, getParamFromURL, isLogin } from "../../utils/utils.js"
 
 window.addEventListener('load', async () => {
     const loadingContainer = document.querySelector('#loading-container')
+    const showCategoies = document.querySelector('#show-categoies')
     const categoriesContainer = document.querySelector('#categories-container')
     const categoriesSection = document.querySelector('#categories')
     const descriptionCheckbox = document.querySelector('#description-checkbox')
@@ -88,6 +89,7 @@ window.addEventListener('load', async () => {
         if (event.target.value.trim()) {
             resultContainerModal.innerHTML = ''
             resultContainerModal.classList.add('active')
+            removeIcon.classList.add('active')
 
             const searchedCategories = subCategories.filter(subCategory => subCategory.title.includes(event.target.value.trim()))
 
@@ -124,6 +126,11 @@ window.addEventListener('load', async () => {
         resultContainerModal.innerHTML = ''
         resultContainerModal.classList.remove('active')
         removeIcon.classList.remove('active')
+    })
+
+    showCategoies?.addEventListener('click', () => {
+        categoriesContainer.style.display = 'block'
+        showCategoies.style.display = 'none'
     })
 
 
