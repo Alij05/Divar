@@ -28,7 +28,7 @@ window.addEventListener('load', async () => {
                 }
                     </div>
                     <div>
-                        <button >
+                        <button onclick="sharePost('${post._id}', '${post.title}')">
                             اشتراک گذاری
                             <i class="bi bi-share"></i>
                         </button>
@@ -100,6 +100,8 @@ window.addEventListener('load', async () => {
 
     }
 
-
+    window.sharePost = async (postID, postTitle) => {
+        await navigator.share({ title: postTitle, url: `/pages/post.html?id=${postID}` })
+    }
 
 })
