@@ -1,6 +1,6 @@
-import { requestNewOTP, submitPhoneNumber, verifyOTP } from "../../utils/auth.js";
+import { logout, requestNewOTP, submitPhoneNumber, verifyOTP } from "../../utils/auth.js";
 import { getAllLocations, getAndShowHeaderCityLocations, getCategories, showSocialMedias, showUserPanelLinks } from "../../utils/shared.js";
-import { addParamToURL, getFromLocalStorage, getParamFromURL, hideModal, isLogin, removeParamFromURL, saveInLocalStorage, showModal } from "../../utils/utils.js";
+import { addParamToURL, getFromLocalStorage, getMe, getParamFromURL, hideModal, isLogin, removeParamFromURL, saveInLocalStorage, showModal } from "../../utils/utils.js";
 
 
 window.addEventListener('load', async () => {
@@ -36,10 +36,10 @@ window.addEventListener('load', async () => {
     const submitPhoneNumberBtn = document.querySelector(".submit_phone_number_btn");
     const loginBtn = document.querySelector(".login_btn");
     const reqNewCodeBtn = document.querySelector(".req_new_code_btn");
-    
+
     const createPostBtn = document.querySelector(".create_post_btn");
 
-    
+
 
 
     let selectedCities = []
@@ -82,6 +82,14 @@ window.addEventListener('load', async () => {
         showActiveCategorySubs(allCategories[0]._id)
     })
 
+    getMe().then(user => {
+        if (user) {
+            const logoutBtn = document.querySelector(".logout-link");
+            logoutBtn?.addEventListener('click', () => {
+                logout()
+            })
+        }
+    })
 
     const showProvinces = (cities) => {
         const citiesModalCities = document.querySelector('.city-modal__cities')

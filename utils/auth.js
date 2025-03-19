@@ -155,8 +155,22 @@ const requestNewOTP = async () => {
 }
 
 
+const logout = async () => {
+    showSwal("آیا از خروج از حساب کاربری خود مطمئن هستید؟", "warning", ["خیر", "بله"], (result) => {
+        if (result) {
+            localStorage.removeItem("token");
+            showSwal("با موفقیت خارج شدید", "success", "رفتن به هوم پیج", () => {
+                location.href = "/index.html";
+            });
+        }
+    });
+
+}
+
+
 export {
     submitPhoneNumber,
     verifyOTP,
     requestNewOTP,
+    logout,
 }
