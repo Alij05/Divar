@@ -36,8 +36,10 @@ const showSocialMedias = async () => {
 }
 
 
-const getPosts = async (citiesIDs) => {
-  let url = `${baseUrl}/v1/post/?city=${citiesIDs}`;
+const getPosts = async (citiesIDs, page) => {
+  console.log(page);
+  
+  let url = `${baseUrl}/v1/post/?city=${citiesIDs}&page=${page}&limit=12`;
   const categoryID = getParamFromURL('categoryID')
   const searchValue = getParamFromURL('search')
 

@@ -495,3 +495,50 @@ display: block !important;
 
 /* !=======================================End Main Style!======================================= */
  
+
+
+.pagination-items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+
+.pagination-items li {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 14px;
+    border-radius: 0.75rem;
+    border: 2px solid #9e9e9e;
+    transition: all 150ms ease-in;
+    cursor: pointer;
+}
+
+.pagination-items li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9e9e9e;
+}
+
+.pagination-items li:hover {
+    background-color: #a62626;
+    border-color: #a62626;
+}
+
+.pagination-items li:hover a {
+    color: snow;
+}
+
+.active {
+    background-color: #a62626;
+    border-color: #a62626 !important;
+}
+.active a {
+    color: snow !important;
+}

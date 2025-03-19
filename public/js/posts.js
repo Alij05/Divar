@@ -1,8 +1,11 @@
 import { baseUrl, getCategories, getPosts } from "../../utils/shared.js"
-import { addParamToURL, removeParamFromURL, getParamFromURL, calculateRelativeTimeDifference, getFromLocalStorage } from "../../utils/utils.js"
+import { addParamToURL, removeParamFromURL, getParamFromURL, calculateRelativeTimeDifference, getFromLocalStorage, pagination } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
+  const paginationItemsContainer = document.querySelector(".pagination-items");
+  let page = getParamFromURL('page')
+  !page ? page = 1 : null
 
   const cities = getFromLocalStorage('cities')
 
@@ -10,18 +13,21 @@ window.addEventListener('load', () => {
   let backupPosts = null
   let appliedDynamicFilters = {}
 
-  
+
   // Title of Tab
   if (cities.length === 1) {
     document.title = `دیوار ${cities[0].name} : مرجع خرید و فروش اجناس نو و دسته دو`
   } else {
     document.title = `دیوار ${cities.length} شهر : مرجع خرید و فروش اجناس نو و دسته دو`
   }
-  
+
   const citiesIDs = cities.map(city => city.id).join('|')
-  getPosts(citiesIDs).then(response => {
+  getPosts(citiesIDs, page).then(response => {
     // Website Loader
     loadingContainer.style.display = 'none'
+
+    // Pagination
+    pagination("/pages/posts.html", paginationItemsContainer, page, response.data.pagination.totalPosts, 12)
 
     posts = response.data.posts
     backupPosts = response.data.posts
