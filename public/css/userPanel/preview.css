@@ -1,8 +1,140 @@
 @import url(/public/css/userPanel/share.css);
 
 * {
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
 }
+
+
+/* registerPost.css */
+
+select {
+    -webkit-appearance: none;
+    width: 100%;
+    border: 1px solid #e8eaed;
+    border-radius: 5px;
+    background: #fff;
+    padding: 7px 12px 11px 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    transition: all 150ms ease;
+}
+
+.field-box {
+    position: relative;
+    direction: rtl;
+    min-width: 200px;
+}
+
+.field-box svg {
+    position: absolute;
+    left: 12px;
+    top: calc(50% - 3px);
+    width: 10px;
+    height: 6px;
+    stroke-width: 2px;
+    stroke: #9098a9;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.field-title {
+    font-weight: 600;
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: black;
+}
+
+
+
+
+/*?  Map Styles */
+.map-container {
+    width: 50%;
+}
+
+#map {
+    height: 300px;
+    margin-top: 20px;
+}
+
+.map-controll p {
+    color: #000;
+}
+
+.map-controll {
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 3rem;
+    margin-top: 1rem;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.308);
+    display: flex;
+    justify-content: space-between;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 53px;
+    height: 25px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch input:checked+.slider {
+    background-color: #a62626;
+}
+
+.switch input:focus+.slider {
+    box-shadow: 0 0 1px #a62626;
+}
+
+.switch input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+
+
+/*?  Images Container Styles */
+.image-box div .bi {
+    color: white;
+}
+
+.image-box div {
+    background-color: rgba(0, 0, 0, 0.32);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    height: 2rem;
+    top: 35px;
+    transition: background-color 0.36s ease;
+    width: 2rem;
+    align-items: center;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    left: 4px;
+    outline: none;
+    position: absolute;
+}
+
+.image-box {
+    position: relative;
+}
+
+
+
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 .publish {
     color: green;
@@ -13,6 +145,7 @@
     color: red;
     font-weight: 800;
 }
+
 .pending {
     color: orange;
     font-weight: 800;
@@ -215,7 +348,7 @@
 }
 
 .location-description {
-    font-size:1.2rem;
+    font-size: 1.2rem;
 }
 
 .location-description span {
@@ -383,11 +516,13 @@ input:checked+.slider:before {
     font-weight: 500;
     padding: 1.2rem 1.5rem;
 }
-.post__info-item a{
+
+.post__info-item a {
     color: #a62626;
 }
+
 .post__info-value {
-    color:#000;
+    color: #000;
 }
 
 .post__info-list {
@@ -467,20 +602,26 @@ input:checked+.slider:before {
     pointer-events: none;
     user-select: none;
 }
-.leaflet-control-attribution{
+
+.leaflet-control-attribution {
     display: none;
 }
 
-.post-images{
+.post-images {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
     align-items: end;
 }
-.post-images img{
+
+.post-images img {
     width: 100px;
     border-radius: 5px;
     height: 103px;
     margin-top: 3rem;
     margin-bottom: 2rem;
 }
+
+
+
+/* registerPost.css */
