@@ -89,8 +89,6 @@ window.addEventListener('load', () => {
             }
         })
 
-        console.log(subCategory);
-
         dynamicFiltersContainer.innerHTML = ''
         subCategory.productFields.map(field => {
             dynamicFiltersContainer.insertAdjacentHTML('beforeend', `
