@@ -1,13 +1,16 @@
 import { baseUrl } from "../../../utils/shared.js"
-import { calculateRelativeTimeDifference, getToken, showSwal } from "../../../utils/utils.js"
+import { calculateRelativeTimeDifference, getParamFromURL, getToken, pagination, showSwal } from "../../../utils/utils.js"
 
 window.addEventListener('load', async () => {
     const postsContainer = document.querySelector("#posts-container")
     const emptyContainer = document.querySelector(".empty")
+    const paginationItemsContainer = document.querySelector(".pagination-items");
 
+    const token = getToken()
+    let page = getParamFromURL('page')
+    !page ? (page = 1) : null
 
     //!  Functions
-
 
     const postGenerator = (posts) => {
         postsContainer.innerHTML = ''
@@ -47,10 +50,7 @@ window.addEventListener('load', async () => {
 
 
 
-
-    const token = getToken()
-
-    const res = await fetch(`${baseUrl}/v1/user/bookmarks`, {
+    const res = await fetch(`${baseUrl}/v1/user/bookmarks?page=${page}&limit=4`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -60,6 +60,8 @@ window.addEventListener('load', async () => {
 
     if (posts.length) {
         postGenerator(posts)
+        pagination("/pages/userPanel/bookmarks.html", paginationItemsContainer, page, response.data.pagination.totalPosts, 4)
+
     } else {
         emptyContainer.style.display = 'flex'
     }
