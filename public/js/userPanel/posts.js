@@ -62,7 +62,7 @@ window.addEventListener('load', async () => {
         generatePublishedPosts(posts)
         pagination("/pages/userPanel/posts.html", paginationItemsContainer, page, response.data.pagination.totalPosts, 1)
     } else {
-
+        emptyContainer.style.display = "flex";
     }
 
 })
