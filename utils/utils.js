@@ -126,12 +126,12 @@ const getMe = async () => {
 const pagination = (href, paginationContainer, currentPage, totalItems, itemsPerPage) => {
     paginationContainer.innerHTML = ''
     const pagesCount = Math.ceil(totalItems / itemsPerPage)
-    
+
 
     for (let i = 1; i <= pagesCount; i++) {
         paginationContainer.insertAdjacentHTML('beforeend', `
             <li class="${i === Number(currentPage) ? "active" : ""}">
-              <a href="${href}?page=${i}">${i}</a>
+              <a href="${href.includes('?') ? `${href}&page=${i}` : `${href}?page=${i}`}">${i}</a>
             </li>
             `)
     }

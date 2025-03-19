@@ -4,6 +4,8 @@ import { addParamToURL, removeParamFromURL, getParamFromURL, calculateRelativeTi
 window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('#loading-container')
   const paginationItemsContainer = document.querySelector(".pagination-items");
+  const categoryID = getParamFromURL('categoryID')
+
   let page = getParamFromURL('page')
   !page ? page = 1 : null
 
@@ -27,7 +29,11 @@ window.addEventListener('load', () => {
     loadingContainer.style.display = 'none'
 
     // Pagination
-    pagination("/pages/posts.html", paginationItemsContainer, page, response.data.pagination.totalPosts, 12)
+    if (categoryID) {
+      pagination(`/pages/posts.html?categoryID=${categoryID}`, paginationItemsContainer, page, response.data.pagination.totalPosts, 12)
+    } else {
+      pagination("/pages/posts.html", paginationItemsContainer, page, response.data.pagination.totalPosts, 12)
+    }
 
     posts = response.data.posts
     backupPosts = response.data.posts
@@ -161,7 +167,6 @@ window.addEventListener('load', () => {
   }
 
 
-  const categoryID = getParamFromURL('categoryID')
   const generateCategories = (categories) => {
     const sidebarCategoriesList = document.querySelector('#sidebar__category-list')
 
