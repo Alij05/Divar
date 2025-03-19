@@ -22,7 +22,7 @@ window.addEventListener('load', async () => {
             const date = calculateRelativeTimeDifference(post.createdAt)
 
             postsContainer.insertAdjacentHTML('beforeend', `
-                <a class="post" href="/pages/post.html?id=${post._id}">
+                <a class="post" ${post.status === "pending" ? `href="/pages/userPanel/posts/preview.html?id=${post._id}"` : `href="/pages/post.html?id=${post._id}"`}>
                     <div class="post-info">
                         ${post.pics.length ? `<img src="${baseUrl}/${post.pics[0].path}" />` : `<img src="/public/images/main/noPicture.PNG" />`}
                         <div>
