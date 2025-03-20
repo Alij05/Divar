@@ -27,7 +27,6 @@ window.addEventListener('load', async () => {
         postsTable.innerHTML = ''
 
         if (posts.length) {
-            pagination('/pages/adminPanel/posts.html', paginationItemsContainer, page, response.data.pagination.totalPosts, 10)
             postsTable.insertAdjacentHTML(
                 `beforeend`,
                 `
@@ -69,6 +68,9 @@ window.addEventListener('load', async () => {
             emptyContainer.style.display = 'flex'
         }
 
+        // Pagination
+        pagination('/pages/adminPanel/posts.html', paginationItemsContainer, page, response.data.pagination.totalPosts, 10)
+
     }
 
     // Call the Method
@@ -91,7 +93,7 @@ window.addEventListener('load', async () => {
                         },
                         body: JSON.stringify({ status: 'published' })
 
-                    }).then(async(res) => {
+                    }).then(async (res) => {
                         if (res.status === 200) {
                             await postGenerator();
                             showSwal(
@@ -124,7 +126,7 @@ window.addEventListener('load', async () => {
                         },
                         body: JSON.stringify({ status: 'rejected' })
 
-                    }).then(async(res) => {
+                    }).then(async (res) => {
                         if (res.status === 200) {
                             await postGenerator();
                             showSwal(
@@ -155,7 +157,7 @@ window.addEventListener('load', async () => {
                             Authorization: `Bearer ${token}`,
                         }
 
-                    }).then(async(res) => {
+                    }).then(async (res) => {
                         if (res.status === 200) {
                             await postGenerator();
                             showSwal(
