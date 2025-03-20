@@ -24,6 +24,8 @@ window.addEventListener('load', async () => {
         const response = await res.json()
         const posts = response.data.posts
 
+        postsTable.innerHTML = ''
+
         if (posts.length) {
             pagination('/pages/adminPanel/posts.html', paginationItemsContainer, page, response.data.pagination.totalPosts, 10)
             postsTable.insertAdjacentHTML(
@@ -73,6 +75,102 @@ window.addEventListener('load', async () => {
     await postGenerator()
 
 
+    //! Bind Methods
+    window.acceptPost = (postID) => {
+        showSwal(
+            "آیا از تایید آگهی مطمئن هستید؟",
+            "warning",
+            ["خیر", "آره"],
+            (result) => {
+                if (result) {
+                    fetch(`${baseUrl}/v1/post/${postID}/status`, {
+                        method: "PUT",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ status: 'published' })
 
+                    }).then(async(res) => {
+                        if (res.status === 200) {
+                            await postGenerator();
+                            showSwal(
+                                "آگهی مورد نظر با موفقیت تایید شد",
+                                "success",
+                                "اوکی",
+                                () => { }
+                            );
+
+                        }
+                    })
+
+                }
+            }
+        )
+    }
+
+    window.rejectPost = (postID) => {
+        showSwal(
+            "آیا از رد آگهی مطمئن هستید؟",
+            "warning",
+            ["خیر", "آره"],
+            (result) => {
+                if (result) {
+                    fetch(`${baseUrl}/v1/post/${postID}/status`, {
+                        method: "PUT",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ status: 'rejected' })
+
+                    }).then(async(res) => {
+                        if (res.status === 200) {
+                            await postGenerator();
+                            showSwal(
+                                "آگهی مورد نظر با موفقیت رد شد",
+                                "success",
+                                "اوکی",
+                                () => { }
+                            );
+
+                        }
+                    })
+
+                }
+            }
+        )
+    }
+
+    window.deletePost = (postID) => {
+        showSwal(
+            "آیا از حذف آگهی مطمئن هستید؟",
+            "warning",
+            ["خیر", "آره"],
+            (result) => {
+                if (result) {
+                    fetch(`${baseUrl}/v1/post/${postID}`, {
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        }
+
+                    }).then(async(res) => {
+                        if (res.status === 200) {
+                            await postGenerator();
+                            showSwal(
+                                "آگهی مورد نظر با موفقیت حذف شد",
+                                "success",
+                                "اوکی",
+                                () => { }
+                            );
+
+                        }
+                    })
+
+                }
+            }
+        )
+    }
 
 })
