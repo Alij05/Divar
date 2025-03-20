@@ -1,5 +1,5 @@
 import { baseUrl, getPostDetails } from "../../utils/shared.js"
-import { calculateRelativeTimeDifference, getParamFromURL, getToken, hideModal, isLogin, showModal, showSwal } from "../../utils/utils.js"
+import { calculateRelativeTimeDifference, getFromLocalStorage, getParamFromURL, getToken, hideModal, isLogin, saveInLocalStorage, showModal, showSwal } from "../../utils/utils.js"
 
 window.addEventListener('load', () => {
 
@@ -10,6 +10,22 @@ window.addEventListener('load', () => {
 
     const isUserLogin = await isLogin()
     const token = getToken()
+
+    const recentSeens = getFromLocalStorage('recent-seens')
+    const isPostSeen = recentSeens?.some(postID => postID === post._id)
+
+    if (!isPostSeen && recentSeens) {
+      saveInLocalStorage('recent-seens', [...recentSeens, post._id])
+    } else {
+      if (recentSeens) {
+        if (!isPostSeen) {
+          saveInLocalStorage('recent-seens', [...recentSeens, post._id])
+        }
+      } else {
+        saveInLocalStorage('recent-seens', [post._id])
+      }
+    }
+
 
     let noteID = null
     let bookmarkStatus = false
@@ -211,7 +227,7 @@ window.addEventListener('load', () => {
             <img src="${baseUrl}/${pic.path}" />
           </div>
           `)
-          
+
         secondSlider.insertAdjacentHTML('beforeend', `
             <div class="swiper-slide">
               <img src="${baseUrl}/${pic.path}" />
