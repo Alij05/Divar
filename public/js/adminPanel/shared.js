@@ -13,7 +13,7 @@ window.addEventListener('load', async () => {
     const isUserLogin = await isLogin()
     if (isUserLogin) {
         getMe().then(user => {
-            if (user.role === 'ADMIN') {
+            if (user.role !== 'ADMIN') {
                 location.href = '/pages/posts.html'
             }
 
