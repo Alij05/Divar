@@ -10,6 +10,8 @@ window.addEventListener('load', async () => {
     const postInfoesList = document.querySelector('#post-infoes-list')
     const postDescription = document.querySelector('#post-description')
     const previewMap = document.querySelector('#preview-map')
+    const mainSlider = document.querySelector("#main-slider-wrapper")
+    const secondSlider = document.querySelector("#secend-slider-wrapper");
     const deleteBtn = document.querySelector('.delete-btn')
     const editPostBtn = document.querySelector('#edit-post')
     const dynamicFieldsContainer = document.querySelector('#dynamic-fields')
@@ -44,9 +46,48 @@ window.addEventListener('load', async () => {
     postPrice.innerHTML = `قیمت : ${post.price.toLocaleString()} تومان`
     postDescription.innerHTML = `توضحیحات آگهی : ${post.description}`
     postInfoesList.innerHTML = `دسته بندی : ${post.breadcrumbs.category.title} > ${post.breadcrumbs.subCategory.title} > ${post.breadcrumbs.subSubCategory.title}`
-    previewMap.insertAdjacentHTML('beforeend', `
-        ${post.pics.length ? `<img src="${baseUrl}/${post.pics[0].path}" width=400px; height=300px;/>` : `<img src="/public/images/main/noPicture.PNG" />`}
-    `)
+
+    const mainSliderConfigs = new Swiper(".mySwiper", {
+        spaceBetween: 10,
+        rewind: true,
+        slidesPerView: 4,
+        freeMode: true,
+      });
+
+      const secondSliderConfigs = new Swiper(".mySwiper2", {
+        spaceBetween: 10,
+        rewind: true,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+  
+        thumbs: {
+          swiper: mainSliderConfigs,
+        },
+      });
+      
+
+    if (post.pics.length) {
+        post.pics.map(pic => {
+            mainSlider.insertAdjacentHTML('beforeend', `
+                <div class="swiper-slide">
+                  <img src="${baseUrl}/${pic.path}" />
+                </div>
+                `)
+
+                secondSlider.insertAdjacentHTML('beforeend', `
+                    <div class="swiper-slide">
+                      <img src="${baseUrl}/${pic.path}" />
+                    </div>
+                  `)
+        })
+
+    } else {
+        previewMap.insertAdjacentHTML('beforeend', 
+         `<img src="/public/images/main/noPicture.PNG" />`
+        )
+    }
 
     imagesContainer.innerHTML = ''
     // Add Uploaded Images to Pics[] Array & Show them

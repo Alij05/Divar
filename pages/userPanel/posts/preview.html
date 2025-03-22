@@ -10,6 +10,7 @@
         href="https://support-faq.divarcdn.com/web/2024/03/favicon-32x32.png" />
     <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.css" />
     <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="/vendor/swiper/swiper.css">
     <link rel="stylesheet" href="/public/css/share.css" />
     <link rel="stylesheet" href="/public/css/userPanel/preview.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -155,7 +156,18 @@
                                 </div>
                             </div>
                             <div class="map-container">
-                                <div id="preview-map"></div>
+                                <!-- <div id="preview-map"></div> -->
+                                <div class="post-preview" id="post-preview">
+                                    <div class="swiper mySwiper2">
+                                        <div class="swiper-wrapper" id="main-slider-wrapper"></div>
+                                        <div class="swiper-button-next"></div>
+                                        <div class="swiper-button-prev"></div>
+                                    </div>
+
+                                    <div thumbsSlider class="swiper mySwiper">
+                                        <div class="swiper-wrapper" id="secend-slider-wrapper"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -326,6 +338,7 @@
     <!--!==========================================End city Modal==========================================!-->
 
     <script src="/vendor/bootstrap/bootstrap.js"></script>
+    <script src="/vendor/swiper/swiper.js"></script>
     <!-- Choices.js -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <!-- Leaflet -->

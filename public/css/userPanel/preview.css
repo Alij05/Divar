@@ -671,8 +671,100 @@ input:checked+.slider:before {
 .choices[data-type*="select-one"]::after {
     left: 11.5px !important;
     right: unset !important;
-  }
-  .choices__list--dropdown,
-  .choices__list[aria-expanded] {
+}
+
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
     z-index: 9999 !important;
-  }
+}
+
+
+
+/** Swiper Js */
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.post-preview {
+    position: relative;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    font-size: 20px;
+    color: white;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.swiper {
+    width: 100%;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.swiper-slide {
+    background-size: cover;
+    background-position: center;
+}
+
+.mySwiper2 {
+    height: 400px !important;
+    width: 100%;
+}
+
+.mySwiper {
+    height: 83px !important;
+    box-sizing: border-box;
+    padding: 10px 0;
+}
+
+.mySwiper .swiper-slide:hover {
+    opacity: 1;
+}
+
+.mySwiper .swiper-slide {
+    width: 68px !important;
+    height: 68px !important;
+    cursor: pointer;
+    transition: .2s all ease-in;
+    opacity: 0.4;
+}
+
+.mySwiper .swiper-slide-thumb-active {
+    opacity: 1;
+}
+
+.swiper-pagination-bullet {
+    background-color: #fff;
+    opacity: 0.5;
+    width: 1.2rem;
+    height: 1.2rem;
+    transition: all 0.4s ease;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #a62626;
+    opacity: 1;
+    height: 1.2rem;
+    width: 2rem;
+    border-radius: 2rem;
+}
