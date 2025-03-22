@@ -19,6 +19,7 @@ window.addEventListener('load', async () => {
     const imagesContainer = document.querySelector('#images-container')
 
     let pics = []
+    let categoryFields = {}
 
     const postID = getParamFromURL('id')
     const token = getToken()
@@ -29,7 +30,7 @@ window.addEventListener('load', async () => {
     })
     const response = await res.json()
     const post = response.data.post
-    console.log(post);
+    // console.log(post);
 
 
     postTitle.innerHTML = `نام آگهی : ${post.title}`
@@ -41,43 +42,53 @@ window.addEventListener('load', async () => {
         ${post.pics.length ? `<img src="${baseUrl}/${post.pics[0].path}" width=400px; height=300px;/>` : `<img src="/public/images/main/noPicture.PNG" />`}
     `)
 
-    post.category.productFields.map(field => {
-        dynamicFieldsContainer.insertAdjacentHTML('beforeend', `
-                ${field.type === 'selectbox' ?
-                `
-                <div class="group">
-                        <p class="field-title">${field.name}</p>
-                        <div class="field-box">
-                          <select required="required" onchange="fieldChangeHandler('${field.slug}', event.target.value)">
-                            <option value=null>انتخاب</option>
-                            ${field.options.map(option =>
-                    `<option value="${option}">${option}</option>`)}
-                          </select>
-                          <svg>
-                            <use xlink:href="#select-arrow-down"></use>
-                          </svg>
-                        </div>
-                            <svg class="sprites">
-                              <symbol id="select-arrow-down" viewbox="0 0 10 6">
-                                <polyline points="1 1 5 5 9 1"></polyline>
-                              </symbol>
-                            </svg>
-                        </div>
+    if (post.category.productFields.length) {
+        post.category.productFields.map(field => {
+            categoryFields[field.slug] = field.type === 'selectbox' ? null : false
+
+            dynamicFieldsContainer.insertAdjacentHTML('beforeend', `
+                    ${field.type === 'selectbox' ?
                     `
-                :
+                    <div class="group">
+                            <p class="field-title">${field.name}</p>
+                            <div class="field-box">
+                              <select required="required" onchange="fieldChangeHandler('${field.slug}', event.target.value)">
+                                <option value=null>انتخاب</option>
+                                ${field.options.map(option =>
+                        `<option value="${option}">${option}</option>`)}
+                              </select>
+                              <svg>
+                                <use xlink:href="#select-arrow-down"></use>
+                              </svg>
+                            </div>
+                                <svg class="sprites">
+                                  <symbol id="select-arrow-down" viewbox="0 0 10 6">
+                                    <polyline points="1 1 5 5 9 1"></polyline>
+                                  </symbol>
+                                </svg>
+                            </div>
+                        `
+                    :
 
-                `
-                    <div class="group checkbox-group">
-                      <input class="checkbox" type="checkbox" onchange="fieldChangeHandler('${field.slug}', event.target.checked)" />
-                      <p>${field.name}</p>
-                    </div>     
-                    `}
-            `)
+                    `
+                        <div class="group checkbox-group">
+                          <input class="checkbox" type="checkbox" onchange="fieldChangeHandler('${field.slug}', event.target.checked)" />
+                          <p>${field.name}</p>
+                        </div>     
+                        `}
+                `)
 
-    })
+        })
+    }
+
+    window.fieldChangeHandler = (slug, value) => {
+        categoryFields[slug] = value
+    }
 
 
-    //? Map  
+
+
+
     // Leaflet Map
     let mapView = { x: 35.715298, y: 51.404343 }
     let markerIcon = null
@@ -102,17 +113,7 @@ window.addEventListener('load', async () => {
         maxZoom: 19
     }).addTo(map)
 
-    mapIconControll.addEventListener('change', (event) => {
-        if (event.target.checked) {
-            markerIcon = secondICon
-            mapMarker.setIcon(markerIcon)
-        } else {
-            markerIcon = firstICon
-            mapMarker.setIcon(markerIcon)
-        }
-    })
-
-    // use on for Set Event
+    // Update marker position on map move
     map.on("move", () => {
         const center = map.getSize().divideBy(2)
         const targetPoint = map.containerPointToLayerPoint(center);
@@ -125,7 +126,6 @@ window.addEventListener('load', async () => {
             y: targetLating.lng,
         }
     })
-
 
 
 
@@ -160,7 +160,6 @@ window.addEventListener('load', async () => {
 
 
     //! Events
-
 
     deleteBtn.addEventListener('click', async (event) => {
         showSwal(
@@ -220,6 +219,7 @@ window.addEventListener('load', async () => {
 
     editPostBtn.addEventListener('click', () => {
         //* Check Validation
+        // if ()
     })
 
 
