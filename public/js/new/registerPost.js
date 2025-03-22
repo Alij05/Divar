@@ -314,7 +314,7 @@ window.addEventListener('load', () => {
                     "success",
                     "پنل کاربری",
                     () => {
-                        location.href = `/pages/userPanel/posts/preview.html`;
+                        location.href = `/pages/userPanel/posts.html`;
                     }
                 )
             } else if (res.status === 400) {
