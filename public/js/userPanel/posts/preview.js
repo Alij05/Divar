@@ -1,4 +1,4 @@
-import { baseUrl } from "../../../../utils/shared.js"
+import { baseUrl, getAllLocations } from "../../../../utils/shared.js"
 import { getParamFromURL, getToken, showSwal } from "../../../../utils/utils.js"
 
 
@@ -13,6 +13,8 @@ window.addEventListener('load', async () => {
     const deleteBtn = document.querySelector('.delete-btn')
     const editPostBtn = document.querySelector('#edit-post')
     const dynamicFieldsContainer = document.querySelector('#dynamic-fields')
+    const citySelectBox = document.querySelector('#city-select')
+    const neighborhoodSelectBox = document.querySelector('#neighborhood-select')
 
     const mapIconControll = document.querySelector('.icon-controll')
     const inputUploader = document.querySelector('#uploader')
@@ -85,6 +87,71 @@ window.addEventListener('load', async () => {
         categoryFields[slug] = value
     }
 
+
+
+    // USe Choices.js to Show Cities and Neighberhoods
+    getAllLocations().then(data => {
+        const cityChoices = new Choices(citySelectBox)
+        const neighborhoodChoices = new Choices(neighborhoodSelectBox)
+
+        const tehranNeighborhood = data.neighborhoods.filter(neighborhood => neighborhood.city_id === 301)
+
+        cityChoices.setChoices(
+            data.cities.map(city => ({
+                value: city.id,
+                label: city.name,
+                customProperties: { id: city.id },
+                selected: city.name === 'تهران' ? true : false
+            })), 'value', 'label', false)
+
+
+        const neighborhoodChoicesConfigs = [
+            {
+                value: 'default',
+                label: 'انتخاب محله',
+                disabled: true,
+                selected: true
+            },
+            ...tehranNeighborhood.map(neighborhood => ({
+                value: neighborhood.id,
+                label: neighborhood.name,
+            }))
+        ]
+        neighborhoodChoices.setChoices(neighborhoodChoicesConfigs, 'value', 'label', false)
+
+        // Connect City Selectbox to Neighborhood Selectbox to Show neighborhoods Dynamicly
+        citySelectBox.addEventListener('addItem', (event) => {
+            neighborhoodChoices.clearStore()  // Delete all Options of neighborhoodChoices Selectbox
+
+            const neighborhoods = data.neighborhoods.filter(neighborhood => neighborhood.city_id === event.detail.customProperties.id)
+
+            if (neighborhoods.length) {
+                const neighborhoodChoicesConfigs = [{
+                    value: 'default',
+                    label: 'انتخاب محله',
+                    disabled: true,
+                    selected: true
+                },
+                ...neighborhoods.map(neighborhood => ({
+                    value: neighborhood.id,
+                    label: neighborhood.name,
+                }))
+                ]
+
+                neighborhoodChoices.setChoices(neighborhoodChoicesConfigs, 'value', 'label', false)
+
+            } else {
+                neighborhoodChoices.setChoices([{
+                    value: 0,
+                    label: 'محله ای یافت نشد',
+                    disabled: true,
+                    selected: true
+                }], 'value', 'label', false)
+            }
+
+        })
+
+    })
 
 
 

@@ -161,6 +161,17 @@
 
                         <div class="tab-pane fade" id="pills-edit" role="tabpanel" aria-labelledby="pills-edit-tab">
 
+                            <!--   Choices Js   -->
+                            <div class="groups">
+                                <div class="group">
+                                    <p class="field-title">شهر</p>
+                                    <select id="city-select" required="required"></select>
+                                </div>
+                                <div class="group">
+                                    <p class="field-title">محله</p>
+                                    <select id="neighborhood-select" required="required"> </select>
+                                </div>
+                            </div>
 
                             <!--   Lealfet Map   -->
                             <div>
@@ -315,6 +326,8 @@
     <!--!==========================================End city Modal==========================================!-->
 
     <script src="/vendor/bootstrap/bootstrap.js"></script>
+    <!-- Choices.js -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <!-- Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin></script>
