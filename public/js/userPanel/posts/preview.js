@@ -13,10 +13,14 @@ window.addEventListener('load', async () => {
     const deleteBtn = document.querySelector('.delete-btn')
     const editPostBtn = document.querySelector('#edit-post')
     const dynamicFieldsContainer = document.querySelector('#dynamic-fields')
+
     const citySelectBox = document.querySelector('#city-select')
     const neighborhoodSelectBox = document.querySelector('#neighborhood-select')
+    const postTitleInput = document.querySelector('#post-title-input')
+    const postDescriptionTextarea = document.querySelector('#post-description-textarea')
+    const postPriceInput = document.querySelector('#post-price-input')
+    const exchangeCheckbox = document.querySelector('#exchange-checkbox')
 
-    const mapIconControll = document.querySelector('.icon-controll')
     const inputUploader = document.querySelector('#uploader')
     const imagesContainer = document.querySelector('#images-container')
 
@@ -32,7 +36,7 @@ window.addEventListener('load', async () => {
     })
     const response = await res.json()
     const post = response.data.post
-    // console.log(post);
+    console.log(post);
 
 
     postTitle.innerHTML = `نام آگهی : ${post.title}`
@@ -284,9 +288,65 @@ window.addEventListener('load', async () => {
     })
 
 
-    editPostBtn.addEventListener('click', () => {
+    editPostBtn.addEventListener('click', async () => {
         //* Check Validation
-        // if ()
+        let allFieldsFilled = true
+        for (const slug in categoryFields) {
+            if (!categoryFields[slug]) {
+                allFieldsFilled = false
+            }
+        }
+
+        if (!allFieldsFilled ||
+            neighborhoodSelectBox.value === "default" ||
+            postTitleInput.value.trim().length === 0 ||
+            postDescriptionTextarea.value.trim().length === 0 ||
+            !postPriceInput.value.trim().length) {
+
+            showSwal("لطفا همه مشخصات رو مشخص کنید", "error", "تلاش مجدد", () => { });
+
+        } else {
+            const formData = new FormData()
+            formData.append("city", citySelectBox.value.trim())
+            formData.append("neighborhood", neighborhoodSelectBox.value.trim())
+            formData.append("title", postTitleInput.value.trim())
+            formData.append("description", postDescriptionTextarea.value.trim())
+            formData.append("price", postPriceInput.value.trim())
+            formData.append("exchange", exchangeCheckbox.checked)
+            formData.append("map", JSON.stringify(mapView))
+            formData.append("categoryFields", JSON.stringify(categoryFields))
+            pics.map(pic => {
+                formData.append("pics", pic)
+            })
+
+            const res = await fetch(`${baseUrl}/v1/post/${post._id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                },
+                body: formData
+            })
+
+            if (res.status === 200) {
+                showSwal(
+                    "آگهی مورد نظر با موفقیت ویرایش شد",
+                    "success",
+                    "پنل کاربری",
+                    () => {
+                        location.href = `/pages/userPanel/posts/preview.html`;
+                    }
+                )
+            } else if (res.status === 400) {
+                showSwal(
+                    "یکی از مشخصات نامعتبر است",
+                    "error",
+                    "تلاش مجدد",
+                    () => { }
+                )
+            }
+
+        }
+
     })
 
 
