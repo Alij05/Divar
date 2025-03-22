@@ -107,7 +107,7 @@ const getPostDetails = async () => {
 
 const showUserPanelLinks = async () => {
   const headerDropdownMenu = document.querySelector('.header_dropdown_menu')
-  headerDropdownMenu.innerHTML = ''
+  headerDropdownMenu ? headerDropdownMenu.innerHTML = '' : null
 
   const isUserLogin = await isLogin()
   const user = await getMe()
